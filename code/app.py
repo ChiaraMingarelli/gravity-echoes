@@ -27,7 +27,7 @@ H0 = H0_km_s_Mpc * 1000.0 / 3.08567758e22
 # SMBH density updated to Liepold & Ma (2024) value
 RHO_SMBH_FID = 1.8e6  # Liepold & Ma (2024), ApJL 971, L29
 RHO_STELLAR_FID = 5.9e8
-RHO_NSC_FID = 1.4e6
+RHO_NSC_FID = 3.0e6
 
 # Population parameters from Table I of Mingarelli (2026), arXiv:2601.18859
 # SMBHB A_bench updated for L&M (2024) density: A = 1.6e-15 at f_ref = 1/yr
@@ -610,15 +610,15 @@ with st.sidebar:
                                          value=1e-5, format_func=lambda x: f"{x:.0e}",
                                          key='echo3_fE')
 
-    # --- Typical binary (6×10⁸, 200 Mpc, 1 μHz) ---
-    show_echo_typical = st.checkbox("Typical (6×10⁸ M☉, 200 Mpc)", value=True,
+    # --- Typical binary (5×10⁸, 200 Mpc, 1 μHz) ---
+    show_echo_typical = st.checkbox("Typical (5×10⁸ M☉, 200 Mpc)", value=True,
                                       key='show_echo_typical',
                                       help="At the echo detection boundary (Tier 1). Orange markers.")
     if show_echo_typical:
         with st.expander("Typical binary parameters"):
             echo2_M = st.select_slider("Total mass (M☉) ",
-                                        options=[1e8, 3e8, 5e8, 6e8, 1e9],
-                                        value=6e8, format_func=lambda x: f"{x:.0e}",
+                                        options=[1e8, 3e8, 5e8, 1e9],
+                                        value=5e8, format_func=lambda x: f"{x:.0e}",
                                         key='echo2_M')
             _f_isco2 = f_isco_schwarzschild(echo2_M)
             st.caption(f"f_ISCO = {_f_isco2:.2e} Hz  ({_f_isco2*1e6:.1f} μHz)")
@@ -944,22 +944,14 @@ ax.grid(True, which='minor', alpha=0.06, ls='-', lw=0.3)
 if st.session_state.get('show_labels', True):
     if muares_curve is not None:
         fm, hm = muares_curve
-        # Only consider points within the plot x-range so the label isn't clipped
-        mask = fm <= 1e-3
-        if np.any(mask):
-            idx = np.where(mask)[0][np.argmin(hm[mask])]
-        else:
-            idx = np.argmin(hm)
+        # Place label at a fixed frequency well inside the plot
+        idx = np.argmin(np.abs(fm - 3e-5))
         ax.text(fm[idx], hm[idx]*0.35, '\u03bcAres', fontsize=15,
                 color=_COL_MUARES, fontweight='bold', ha='center', va='top')
     if lisa_curve is not None:
         fl, hl = lisa_curve
-        # Only consider points within the plot x-range so the label isn't clipped
-        mask = fl <= 1e-3
-        if np.any(mask):
-            idx = np.where(mask)[0][np.argmin(hl[mask])]
-        else:
-            idx = np.argmin(hl)
+        # Place label at a fixed frequency well inside the plot
+        idx = np.argmin(np.abs(fl - 3e-4))
         ax.text(fl[idx], hl[idx]*0.35, 'LISA', fontsize=15,
                 color=_COL_LISA, fontweight='bold', ha='center', va='top')
 
