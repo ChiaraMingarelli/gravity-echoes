@@ -491,10 +491,18 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("Custom PTA")
+    try:
+        import hasasia  # noqa: F401
+        _hasasia_available = True
+    except ImportError:
+        _hasasia_available = False
     show_custom_pta = st.checkbox("Show custom PTA", value=st.session_state['show_custom_pta'],
                                    key='show_custom_pta',
-                                   help="Build your own PTA sensitivity curve")
-    if show_custom_pta:
+                                   help="Build your own PTA sensitivity curve",
+                                   disabled=not _hasasia_available)
+    if not _hasasia_available:
+        st.caption("Requires `hasasia` (pip install hasasia)")
+    if show_custom_pta and _hasasia_available:
         st.slider("Pulsars", 20, 1000,
                    st.session_state['custom_pta_n'], key='custom_pta_n')
         st.slider("Timespan (yr)", 5.0, 50.0,

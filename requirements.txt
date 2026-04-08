@@ -2,4 +2,3 @@ numpy>=1.21
 scipy>=1.7
 matplotlib>=3.5
 streamlit>=1.20
-hasasia>=2.0
