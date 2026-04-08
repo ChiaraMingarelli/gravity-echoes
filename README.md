@@ -1,4 +1,4 @@
-# echo-smbhb
+# Gravity Echoes
 
 Code and data for **"Gravity Echoes from Supermassive Black Hole Binaries"** by Qinyuan Zheng, Bence Bécsy, and Chiara M. F. Mingarelli (2026).
 
