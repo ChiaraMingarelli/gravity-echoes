@@ -216,7 +216,7 @@ def get_lisa_hc(T_obs_yr, f_min=1e-5, f_max=1.0, nfreqs=1000):
 # NANOGrav 15yr: hasasia built-in NG11 DeterSensitivityCurve (real noise models).
 # IPTA 2050: hasasia sim_pta (131 pulsars, 50yr, 200ns, 26/yr).
 #   - WN-only: white noise only
-#   - WN+RN: with per-pulsar red noise from NG15 custom noise models (Larsen+ 2026)
+#   - WN+RN: with per-pulsar red noise from NG12.5 chromatic noise analysis (arXiv:2511.22597)
 # Precomputed with pta_cw_sensitivity.ipynb; see notebook for full derivation.
 _PTA_CACHE = os.path.join(os.path.dirname(__file__), "pta_sensitivity_curves.npz")
 
@@ -1110,8 +1110,8 @@ st.markdown("---")
 st.subheader("PTA Red Noise Assumptions")
 st.markdown("""
 The IPTA 2050 curves include per-pulsar intrinsic
-red noise drawn from the ranges measured in the NANOGrav 15yr custom chromatic
-noise models (Larsen, Baier et al. 2026, Tables 5–6): amplitudes log₁₀A uniformly
+red noise drawn from the ranges measured in the NANOGrav 12.5-year chromatic
+noise analysis ([arXiv:2511.22597](https://arxiv.org/abs/2511.22597)): amplitudes log₁₀A uniformly
 distributed in [−15, −12] and spectral indices γ uniformly distributed in [1, 5].
 Red noise is injected into the pulsar noise covariance matrix via hasasia's
 `sim_pta`. The "WN only" curves use white noise alone (σ = 200 ns) for comparison.
@@ -1126,6 +1126,6 @@ st.markdown("""
 - **\u03bcAres**: Sesana et al. (2021), Exp. Astron. 51, 1333, [arXiv:1908.11391](https://arxiv.org/abs/1908.11391)
 - **PTA sensitivity formalism**: Hazboun, Romano & Smith (2019), PRD 100, 104028;
   NANOGrav curve via [hasasia](https://github.com/Hazboun6/hasasia) (deterministic CW sensitivity)
-- **NANOGrav noise models**: Larsen, Baier, Oliver et al. (2026); Agazie et al. (2023)
+- **NANOGrav noise models**: NANOGrav 12.5-year chromatic noise analysis, [arXiv:2511.22597](https://arxiv.org/abs/2511.22597)
 - **gwent**: [github.com/ark0015/gwent](https://github.com/ark0015/gwent)
 """)
