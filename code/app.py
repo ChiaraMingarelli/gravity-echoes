@@ -63,45 +63,12 @@ POPULATIONS = {
         'epsilon_gw': 0.05,
         'color': '#009E73',
     },
-    'BNS': {
-        'reservoir': 'STELLAR',
-        'f_ref': 0.1,
-        'A_bench': 6.7e-24,
-        'f_min': 1e-2,
-        'f_max': 1500.0,
-        'f_merge_fid': 1.1e-5,
-        'epsilon_gw': 0.01,
-        'color': '#CC79A7',
-    },
-    'Pop III': {
-        'reservoir': 'STELLAR',
-        'f_ref': 0.1,
-        'A_bench': 4.9e-24,
-        'f_min': 1e-2,
-        'f_max': 200.0,
-        'f_merge_fid': 3.0e-7,
-        'epsilon_gw': 0.05,
-        'color': '#56B4E9',
-    },
-    'Stellar BBH': {
-        'reservoir': 'STELLAR',
-        'f_ref': 25.0,
-        'A_bench': 9.5e-25,
-        'f_min': 5.0,
-        'f_max': 200.0,
-        'f_merge_fid': 1.8e-5,
-        'epsilon_gw': 0.05,
-        'color': '#E69F00',
-    },
 }
 
 POPULATION_DISPLAY_NAMES = {
     'SMBHB': 'SMBHBs',
     'IMBH-SMBH': 'AGN-IMRI',
     'EMRI': 'EMRI',
-    'Pop III': 'POPIII',
-    'BNS': 'BNS',
-    'Stellar BBH': 'sBBHs',
 }
 
 _SUP = str.maketrans('-0123456789', '\u207b\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079')
@@ -430,7 +397,7 @@ def _init_defaults():
     st.session_state.setdefault('rho_stellar', RHO_STELLAR_FID)
     st.session_state.setdefault('rho_nsc', RHO_NSC_FID)
     for pop_name in POPULATIONS:
-        _pop_default = pop_name not in ('BNS', 'Pop III', 'Stellar BBH')
+        _pop_default = True
         st.session_state.setdefault(f'show_pop_{pop_name}', _pop_default)
 
     # Fixed PTAs are always on
@@ -590,6 +557,11 @@ with st.sidebar:
 
     st.markdown("---")
     st.header("Echo Sources")
+    show_inspiral_tracks = st.checkbox("Show inspiral tracks",
+                                        value=False, key='show_inspiral_tracks',
+                                        help="Overlay the full inspiral h_c track "
+                                             "(h₀√(f²/ḟ)) behind each echo source. "
+                                             "Terminates at f_ISCO.")
 
     # --- Conservative binary (10⁸, 2 Gpc, 10 μHz) ---
     show_echo_conservative = st.checkbox("Conservative (10⁸ M☉, 2 Gpc)", value=True,
@@ -666,13 +638,6 @@ with st.sidebar:
                                          options=[3e-5, 1e-4, 3e-4, 1e-3, 3e-3],
                                          value=1e-4, format_func=lambda x: f"{x:.0e}",
                                          key='echo4_fE')
-
-    st.markdown("---")
-    show_inspiral_tracks = st.checkbox("Show inspiral tracks",
-                                        value=False, key='show_inspiral_tracks',
-                                        help="Overlay the full inspiral h_c track "
-                                             "(h₀√(f²/ḟ)) behind each echo source. "
-                                             "Terminates at f_ISCO.")
 
     st.markdown("---")
     if st.button("Reset to defaults"):
