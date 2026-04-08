@@ -944,12 +944,22 @@ ax.grid(True, which='minor', alpha=0.06, ls='-', lw=0.3)
 if st.session_state.get('show_labels', True):
     if muares_curve is not None:
         fm, hm = muares_curve
-        idx = np.argmin(hm)
+        # Only consider points within the plot x-range so the label isn't clipped
+        mask = fm <= 1e-3
+        if np.any(mask):
+            idx = np.where(mask)[0][np.argmin(hm[mask])]
+        else:
+            idx = np.argmin(hm)
         ax.text(fm[idx], hm[idx]*0.35, '\u03bcAres', fontsize=15,
                 color=_COL_MUARES, fontweight='bold', ha='center', va='top')
     if lisa_curve is not None:
         fl, hl = lisa_curve
-        idx = np.argmin(hl)
+        # Only consider points within the plot x-range so the label isn't clipped
+        mask = fl <= 1e-3
+        if np.any(mask):
+            idx = np.where(mask)[0][np.argmin(hl[mask])]
+        else:
+            idx = np.argmin(hl)
         ax.text(fl[idx], hl[idx]*0.35, 'LISA', fontsize=15,
                 color=_COL_LISA, fontweight='bold', ha='center', va='top')
 
