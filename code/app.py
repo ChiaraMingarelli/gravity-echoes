@@ -514,48 +514,6 @@ with st.sidebar:
 
 
     st.markdown("---")
-    st.header("GWB Ceilings")
-    st.caption("Energetic ceilings from Mingarelli (2026), arXiv:2601.18859")
-
-    show_gwb_ceilings = st.checkbox("Show GWB ceilings",
-                                     value=st.session_state['show_gwb_ceilings'],
-                                     key='show_gwb_ceilings',
-                                     help="Astrophysical GWB amplitude ceilings "
-                                          "constrained by mass density reservoirs")
-    if show_gwb_ceilings:
-        st.subheader("Populations")
-        for pop_name in POPULATIONS:
-            st.checkbox(POPULATION_DISPLAY_NAMES.get(pop_name, pop_name),
-                        value=st.session_state[f'show_pop_{pop_name}'],
-                        key=f'show_pop_{pop_name}')
-
-        st.subheader("Reservoir Densities")
-        rho_smbh = st.select_slider(
-            "\u03c1_SMBH (M\u2609/Mpc\u00b3)",
-            options=[4.2e5, 1e6, 1.8e6, 3e6, 5e6, 1e7],
-            value=st.session_state['rho_smbh'],
-            format_func=lambda x: f"{x:.1e}",
-            key='rho_smbh',
-            help="SMBH mass density. Fiducial: 1.8\u00d710\u2076 (Liepold & Ma 2024)"
-        )
-        rho_stellar = st.select_slider(
-            "\u03c1_stellar (M\u2609/Mpc\u00b3)",
-            options=[1e8, 3e8, 5.9e8, 1e9, 3e9],
-            value=st.session_state['rho_stellar'],
-            format_func=lambda x: f"{x:.1e}",
-            key='rho_stellar',
-            help="Stellar mass density. Fiducial: 5.9\u00d710\u2078"
-        )
-        rho_nsc = st.select_slider(
-            "\u03c1_NSC (M\u2609/Mpc\u00b3)",
-            options=[1e5, 5e5, 1.4e6, 3e6, 1e7],
-            value=st.session_state['rho_nsc'],
-            format_func=lambda x: f"{x:.1e}",
-            key='rho_nsc',
-            help="Nuclear star cluster mass density. Fiducial: 1.4\u00d710\u2076"
-        )
-
-    st.markdown("---")
     st.header("Echo Sources")
     show_inspiral_tracks = st.checkbox("Show inspiral tracks",
                                         value=False, key='show_inspiral_tracks',
@@ -638,6 +596,48 @@ with st.sidebar:
                                          options=[3e-5, 1e-4, 3e-4, 1e-3, 3e-3],
                                          value=1e-4, format_func=lambda x: f"{x:.0e}",
                                          key='echo4_fE')
+
+    st.markdown("---")
+    st.header("GWB Ceilings")
+    st.caption("Energetic ceilings from Mingarelli (2026), arXiv:2601.18859")
+
+    show_gwb_ceilings = st.checkbox("Show GWB ceilings",
+                                     value=st.session_state['show_gwb_ceilings'],
+                                     key='show_gwb_ceilings',
+                                     help="Astrophysical GWB amplitude ceilings "
+                                          "constrained by mass density reservoirs")
+    if show_gwb_ceilings:
+        st.subheader("Populations")
+        for pop_name in POPULATIONS:
+            st.checkbox(POPULATION_DISPLAY_NAMES.get(pop_name, pop_name),
+                        value=st.session_state[f'show_pop_{pop_name}'],
+                        key=f'show_pop_{pop_name}')
+
+        st.subheader("Reservoir Densities")
+        rho_smbh = st.select_slider(
+            "\u03c1_SMBH (M\u2609/Mpc\u00b3)",
+            options=[4.2e5, 1e6, 1.8e6, 3e6, 5e6, 1e7],
+            value=st.session_state['rho_smbh'],
+            format_func=lambda x: f"{x:.1e}",
+            key='rho_smbh',
+            help="SMBH mass density. Fiducial: 1.8\u00d710\u2076 (Liepold & Ma 2024)"
+        )
+        rho_stellar = st.select_slider(
+            "\u03c1_stellar (M\u2609/Mpc\u00b3)",
+            options=[1e8, 3e8, 5.9e8, 1e9, 3e9],
+            value=st.session_state['rho_stellar'],
+            format_func=lambda x: f"{x:.1e}",
+            key='rho_stellar',
+            help="Stellar mass density. Fiducial: 5.9\u00d710\u2078"
+        )
+        rho_nsc = st.select_slider(
+            "\u03c1_NSC (M\u2609/Mpc\u00b3)",
+            options=[1e5, 5e5, 1.4e6, 3e6, 1e7],
+            value=st.session_state['rho_nsc'],
+            format_func=lambda x: f"{x:.1e}",
+            key='rho_nsc',
+            help="Nuclear star cluster mass density. Fiducial: 1.4\u00d710\u2076"
+        )
 
     st.markdown("---")
     if st.button("Reset to defaults"):
