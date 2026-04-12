@@ -603,7 +603,7 @@ with st.sidebar:
             echo4_q = st.slider("Mass ratio q  ◆", 0.01, 1.0, 1.0, step=0.01, key='echo4_q')
             echo4_DL = st.slider("D_L (Mpc)  ◆", 1, 5000, 100, step=1, key='echo4_DL')
             _fE_nHz = st.slider("f_earth (nHz)  ◆",
-                                min_value=20, max_value=50000, value=1000, step=20,
+                                min_value=1, max_value=1000, value=1000, step=20,
                                 key='echo4_fE_nHz',
                                 help="Earth-term GW frequency in nHz (20 nHz steps)")
             echo4_fE = _fE_nHz * 1e-9
