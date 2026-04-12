@@ -981,7 +981,10 @@ if st.session_state.get('show_legends', True):
                   borderpad=0.4, columnspacing=1.0, handlelength=1.8,
                   title='Echo Sources', title_fontsize=14)
 
-fig.tight_layout()
+try:
+    fig.tight_layout()
+except ValueError:
+    pass
 st.pyplot(fig)
 
 # =============================================================================
