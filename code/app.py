@@ -592,7 +592,7 @@ with st.sidebar:
                                    key='show_echo_lisa',
                                    help="Fully adjustable echo source — covers nHz through mHz. Purple markers.")
     if show_echo_lisa:
-        with st.expander("Custom binary parameters"):
+        with st.expander("Custom binary parameters", expanded=True):
             echo4_M = st.select_slider("Total mass (M☉)  ◆",
                                         options=[1e6, 1e7, 1e8, 3e8, 5e8, 7e8,
                                                  1e9, 2e9, 3e9, 5e9, 1e10],
