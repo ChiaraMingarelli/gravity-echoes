@@ -555,7 +555,7 @@ with st.sidebar:
     if show_echo_typical:
         with st.expander("Typical binary parameters"):
             echo2_M = st.select_slider("Total mass (M☉) ",
-                                        options=[1e8, 3e8, 5e8, 1e9],
+                                        options=[1e8, 3e8, 5e8, 7e8, 1e9, 2e9],
                                         value=5e8, format_func=lambda x: f"{x:.0e}",
                                         key='echo2_M')
             _f_isco2 = f_isco_schwarzschild(echo2_M)
@@ -563,7 +563,7 @@ with st.sidebar:
             echo2_q = st.slider("Mass ratio q ", 0.1, 1.0, 1.0, step=0.1, key='echo2_q')
             echo2_DL = st.slider("D_L (Mpc) ", 10, 2000, 200, step=10, key='echo2_DL')
             echo2_fE = st.select_slider("f_earth (Hz) ",
-                                         options=[1e-7, 3e-7, 1e-6, 3e-6, 1e-5],
+                                         options=[3e-8, 1e-7, 3e-7, 1e-6, 3e-6, 1e-5],
                                          value=1e-6, format_func=lambda x: f"{x:.0e}",
                                          key='echo2_fE')
 
@@ -574,7 +574,7 @@ with st.sidebar:
     if show_echo_optimistic:
         with st.expander("Optimistic binary parameters"):
             echo1_M = st.select_slider("Total mass (M☉)",
-                                        options=[1e8, 3e8, 5e8, 1e9, 2e9, 3e9, 5e9, 1e10],
+                                        options=[1e8, 3e8, 5e8, 7e8, 1e9, 2e9, 3e9, 5e9, 1e10],
                                         value=1e9, format_func=lambda x: f"{x:.0e}",
                                         key='echo1_M')
             _f_isco1 = f_isco_schwarzschild(echo1_M)
@@ -582,27 +582,32 @@ with st.sidebar:
             echo1_q = st.slider("Mass ratio q", 0.1, 1.0, 1.0, step=0.1, key='echo1_q')
             echo1_DL = st.slider("D_L (Mpc)", 10, 1000, 100, step=10, key='echo1_DL')
             echo1_fE = st.select_slider("f_earth (Hz)",
-                                         options=[1e-7, 3e-7, 1e-6, 3e-6, 1e-5, 3e-5, 1e-4],
+                                         options=[3e-8, 1e-7, 3e-7, 1e-6, 3e-6,
+                                                  1e-5, 3e-5, 1e-4],
                                          value=1e-6, format_func=lambda x: f"{x:.0e}",
                                          key='echo1_fE')
 
-    # --- LISA-band binary (10⁶, 100 Mpc, 0.1 mHz) ---
-    show_echo_lisa = st.checkbox("LISA-band (10⁶ M☉, 100 Mpc)", value=False,
+    # --- Custom binary (wide parameter ranges) ---
+    show_echo_lisa = st.checkbox("Custom source", value=False,
                                    key='show_echo_lisa',
-                                   help="LISA-band source — echoes completely undetectable. Red markers.")
+                                   help="Fully adjustable echo source — covers nHz through mHz. Purple markers.")
     if show_echo_lisa:
-        with st.expander("LISA-band binary parameters"):
+        with st.expander("Custom binary parameters"):
             echo4_M = st.select_slider("Total mass (M☉)  ◆",
-                                        options=[1e5, 3e5, 1e6, 3e6, 1e7],
-                                        value=1e6, format_func=lambda x: f"{x:.0e}",
+                                        options=[1e6, 1e7, 1e8, 3e8, 5e8, 7e8,
+                                                 1e9, 2e9, 3e9, 5e9, 1e10],
+                                        value=1e9, format_func=lambda x: f"{x:.0e}",
                                         key='echo4_M')
             _f_isco4 = f_isco_schwarzschild(echo4_M)
-            st.caption(f"f_ISCO = {_f_isco4:.2e} Hz ({_f_isco4*1e3:.1f} mHz)")
-            echo4_q = st.slider("Mass ratio q  ◆", 0.1, 1.0, 1.0, step=0.1, key='echo4_q')
-            echo4_DL = st.slider("D_L (Mpc)  ◆", 10, 1000, 100, step=10, key='echo4_DL')
+            st.caption(f"f_ISCO = {_f_isco4:.2e} Hz ({_f_isco4*1e6:.1f} μHz)")
+            echo4_q = st.slider("Mass ratio q  ◆", 0.01, 1.0, 1.0, step=0.01, key='echo4_q')
+            echo4_DL = st.slider("D_L (Mpc)  ◆", 1, 5000, 100, step=1, key='echo4_DL')
             echo4_fE = st.select_slider("f_earth (Hz)  ◆",
-                                         options=[3e-5, 1e-4, 3e-4, 1e-3, 3e-3],
-                                         value=1e-4, format_func=lambda x: f"{x:.0e}",
+                                         options=[1e-8, 3e-8, 1e-7, 3e-7,
+                                                  1e-6, 3e-6, 1e-5, 3e-5,
+                                                  1e-4, 3e-4, 1e-3],
+                                         value=1e-6,
+                                         format_func=lambda x: f"{x:.0e}",
                                          key='echo4_fE')
 
     st.markdown("---")
@@ -724,7 +729,7 @@ if st.session_state.get('show_gwb_ceilings', False):
 echo1_earth, echo1_pulsars, echo1_warning = None, [], None
 # Echo sources — typical binary
 echo2_earth, echo2_pulsars, echo2_warning = None, [], None
-# Echo sources — LISA-band binary
+# Echo sources — Custom binary
 echo4_earth, echo4_pulsars, echo4_warning = None, [], None
 # Echo sources — conservative binary
 echo3_earth, echo3_pulsars, echo3_warning = None, [], None
@@ -767,10 +772,10 @@ if st.session_state.get('show_echo_conservative', True):
 
 if st.session_state.get('show_echo_lisa', False):
     echo4_earth, echo4_pulsars, echo4_warning = compute_echo_sources(
-        M_total_msun=st.session_state.get('echo4_M', 1e6),
+        M_total_msun=st.session_state.get('echo4_M', 1e9),
         q=st.session_state.get('echo4_q', 1.0),
         D_L_Mpc=st.session_state.get('echo4_DL', 100),
-        f_earth_Hz=st.session_state.get('echo4_fE', 1e-4),
+        f_earth_Hz=st.session_state.get('echo4_fE', 1e-6),
         n_pulsars=20, T_pta_yr=_T_pta, T_muares_yr=_T_mu, seed=314,
     )
 
@@ -792,7 +797,7 @@ _COL_LISA = '#CC6677'      # rose (LISA)
 _COL_OPT = '#CCBB44'       # olive/gold (optimistic) — distinct from SMBHB blue bg
 _COL_TYP = '#AA3377'       # wine/magenta (typical) — distinct from AGN-IMRI orange bg
 _COL_CON = '#EE7733'       # orange (conservative) — distinct from EMRI green bg
-_COL_LISA_SRC = '#882255'  # dark plum (LISA-band)
+_COL_LISA_SRC = '#882255'  # dark plum (Custom source)
 
 # PTA curve styles
 _pta_styles = {
@@ -894,7 +899,7 @@ if st.session_state.get('show_inspiral_tracks', False):
 
 # ── Echo sources ──
 _plot_echo(echo4_earth, echo4_pulsars, _COL_LISA_SRC,
-           'Earth term (LISA-band)', 'Pulsar terms (LISA-band)', psr_marker='s')
+           'Earth term (Custom)', 'Pulsar terms (Custom)', psr_marker='s')
 _plot_echo(echo3_earth, echo3_pulsars, _COL_CON,
            'Earth term (conservative)', 'Pulsar terms (conservative)', psr_marker='^')
 _plot_echo(echo2_earth, echo2_pulsars, _COL_TYP,
@@ -1040,7 +1045,7 @@ if _any_echoes:
     st.subheader("Echo Source Parameters")
 
     for label, e_earth, e_pulsars, e_warn, pfx_key in [
-        ("LISA-band (red)", echo4_earth, echo4_pulsars, echo4_warning, 'echo4'),
+        ("Custom (purple)", echo4_earth, echo4_pulsars, echo4_warning, 'echo4'),
         ("Conservative (green)", echo3_earth, echo3_pulsars, echo3_warning, 'echo3'),
         ("Typical (orange)", echo2_earth, echo2_pulsars, echo2_warning, 'echo2'),
         ("Optimistic (blue)", echo1_earth, echo1_pulsars, echo1_warning, 'echo1'),
@@ -1049,7 +1054,7 @@ if _any_echoes:
             continue
         if e_warn:
             st.warning(e_warn)
-        _defaults = {'echo1': (1e9, 1.0, 100), 'echo2': (6e8, 1.0, 200), 'echo3': (1e8, 1.0, 2000), 'echo4': (1e6, 1.0, 100)}
+        _defaults = {'echo1': (1e9, 1.0, 100), 'echo2': (6e8, 1.0, 200), 'echo3': (1e8, 1.0, 2000), 'echo4': (1e9, 1.0, 100)}
         _dM, _dq, _dDL = _defaults.get(pfx_key, (1e9, 1.0, 100))
         _M = st.session_state.get(f'{pfx_key}_M', _dM)
         _q = st.session_state.get(f'{pfx_key}_q', _dq)
