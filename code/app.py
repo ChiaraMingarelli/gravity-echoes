@@ -602,13 +602,12 @@ with st.sidebar:
             st.caption(f"f_ISCO = {_f_isco4:.2e} Hz ({_f_isco4*1e6:.1f} μHz)")
             echo4_q = st.slider("Mass ratio q  ◆", 0.01, 1.0, 1.0, step=0.01, key='echo4_q')
             echo4_DL = st.slider("D_L (Mpc)  ◆", 1, 5000, 100, step=1, key='echo4_DL')
-            echo4_fE = st.select_slider("f_earth (Hz)  ◆",
-                                         options=[1e-8, 3e-8, 1e-7, 3e-7,
-                                                  1e-6, 3e-6, 1e-5, 3e-5,
-                                                  1e-4, 3e-4, 1e-3],
-                                         value=1e-6,
-                                         format_func=lambda x: f"{x:.0e}",
-                                         key='echo4_fE')
+            _fE_nHz = st.slider("f_earth (nHz)  ◆",
+                                min_value=20, max_value=50000, value=1000, step=20,
+                                key='echo4_fE_nHz',
+                                help="Earth-term GW frequency in nHz (20 nHz steps)")
+            echo4_fE = _fE_nHz * 1e-9
+            st.caption(f"f_earth = {echo4_fE:.2e} Hz")
 
     st.markdown("---")
     st.header("GWB Ceilings")
@@ -775,7 +774,7 @@ if st.session_state.get('show_echo_lisa', False):
         M_total_msun=st.session_state.get('echo4_M', 1e9),
         q=st.session_state.get('echo4_q', 1.0),
         D_L_Mpc=st.session_state.get('echo4_DL', 100),
-        f_earth_Hz=st.session_state.get('echo4_fE', 1e-6),
+        f_earth_Hz=st.session_state.get('echo4_fE_nHz', 1000) * 1e-9,
         n_pulsars=20, T_pta_yr=_T_pta, T_muares_yr=_T_mu, seed=314,
     )
 
