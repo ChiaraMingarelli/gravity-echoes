@@ -859,7 +859,10 @@ if lisa_curve is not None:
 
 # ── Inspiral track helper ──
 def _plot_inspiral_track(earth, color):
-    """Plot the full inspiral h_c(f) track from ~1e-10 Hz up to f_ISCO."""
+    """Plot the inspiral h_c(f) track from ~1e-10 Hz up to f_ISCO.
+
+    Uses min(f*T_obs, f²/ḟ) so the track passes through the echo markers.
+    """
     if earth is None:
         return
     Mc_kg = earth['Mc_kg']
@@ -869,7 +872,11 @@ def _plot_inspiral_track(earth, color):
     h0_arr = (4.0 / D_L_m) * (G_SI * Mc_kg / c_SI**2)**(5./3) * (np.pi * f_arr / c_SI)**(2./3)
     fdot_arr = (96.0/5.0) * np.pi**(8./3) * (G_SI * Mc_kg / c_SI**3)**(5./3) * f_arr**(11./3)
     if strain_key == 'hc':
-        track = h0_arr * np.sqrt(f_arr**2 / fdot_arr)
+        N_chirp = f_arr**2 / fdot_arr
+        # Use T_pta in the PTA band, T_muares in the space-based band
+        T_obs_s = np.where(f_arr < 1e-6, _T_pta * YR_S, _T_mu * YR_S)
+        N_mono = f_arr * T_obs_s
+        track = h0_arr * np.sqrt(np.minimum(N_mono, N_chirp))
     else:
         track = h0_arr
     ax.plot(f_arr, track, color=color, ls='-.', lw=1.0, alpha=0.35, zorder=1)
