@@ -910,12 +910,12 @@ ax.grid(True, which='minor', alpha=0.06, ls='-', lw=0.3)
 if st.session_state.get('show_labels', True):
     if muares_curve is not None:
         fm, hm = muares_curve
-        idx = np.argmin(hm)
+        idx = np.argmin(np.abs(fm - 1e-4))
         ax.text(fm[idx], hm[idx]*0.35, '\u03bcAres', fontsize=15,
                 color=_COL_MUARES, fontweight='bold', ha='center', va='top')
     if lisa_curve is not None:
         fl, hl = lisa_curve
-        idx = np.argmin(hl)
+        idx = np.argmin(np.abs(fl - 1e-5))
         ax.text(fl[idx], hl[idx]*0.35, 'LISA', fontsize=15,
                 color=_COL_LISA, fontweight='bold', ha='center', va='top')
 
