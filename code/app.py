@@ -19,14 +19,9 @@ MSUN = 1.98892e30   # kg
 PC_SI = 3.08568e16  # m
 YR_S = 365.25 * 24 * 3600  # seconds per year
 
-# Cosmological constants
-H0_km_s_Mpc = 67.4
-H0 = H0_km_s_Mpc * 1000.0 / 3.08567758e22
-
 # Fiducial reservoir densities (Msun/Mpc^3)
 # SMBH density updated to Liepold & Ma (2024) value
 RHO_SMBH_FID = 1.8e6  # Liepold & Ma (2024), ApJL 971, L29
-RHO_STELLAR_FID = 5.9e8
 RHO_NSC_FID = 1.4e6
 
 # Population parameters from Table I of Mingarelli (2026), arXiv:2601.18859
@@ -238,19 +233,16 @@ def get_custom_pta_hc(n_pulsars, timespan, sigma_ns, cadence, nfreqs=200):
     return sc.freqs, sc.h_c
 
 
-
-def scale_amplitude(A_bench, reservoir, rho_smbh, rho_stellar, rho_nsc):
+def scale_amplitude(A_bench, reservoir, rho_smbh, rho_nsc):
     """Scale amplitude based on reservoir density relative to fiducial."""
     if reservoir == 'SMBH':
         return A_bench * np.sqrt(rho_smbh / RHO_SMBH_FID)
-    elif reservoir == 'STELLAR':
-        return A_bench * np.sqrt(rho_stellar / RHO_STELLAR_FID)
     elif reservoir == 'NSC':
         return A_bench * np.sqrt(rho_nsc / RHO_NSC_FID)
     return A_bench
 
 
-def get_population_hc(pop_name, rho_smbh, rho_stellar, rho_nsc, nfreqs=500):
+def get_population_hc(pop_name, rho_smbh, rho_nsc, nfreqs=500):
     """Compute characteristic strain ceiling for a GWB population.
 
     Returns (freqs, h_c) over the population's frequency band.
@@ -258,7 +250,7 @@ def get_population_hc(pop_name, rho_smbh, rho_stellar, rho_nsc, nfreqs=500):
     """
     p = POPULATIONS[pop_name]
     A_scaled = scale_amplitude(p['A_bench'], p['reservoir'],
-                               rho_smbh, rho_stellar, rho_nsc)
+                               rho_smbh, rho_nsc)
     f = np.logspace(np.log10(p['f_min']), np.log10(p['f_max']), nfreqs)
     hc = A_scaled * (f / p['f_ref']) ** (-2.0 / 3.0)
     return f, hc
@@ -398,7 +390,6 @@ def _init_defaults():
     st.session_state.setdefault('muares_acc', 1.0)
     st.session_state.setdefault('show_gwb_ceilings', True)
     st.session_state.setdefault('rho_smbh', RHO_SMBH_FID)
-    st.session_state.setdefault('rho_stellar', RHO_STELLAR_FID)
     st.session_state.setdefault('rho_nsc', RHO_NSC_FID)
     for pop_name in POPULATIONS:
         _pop_default = True
@@ -541,14 +532,6 @@ with st.sidebar:
             format_func=lambda x: f"{x:.1e}",
             key='rho_smbh',
             help="SMBH mass density. Fiducial: 1.8\u00d710\u2076 (Liepold & Ma 2024)"
-        )
-        rho_stellar = st.select_slider(
-            "\u03c1_stellar (M\u2609/Mpc\u00b3)",
-            options=[1e8, 3e8, 5.9e8, 1e9, 3e9],
-            value=st.session_state['rho_stellar'],
-            format_func=lambda x: f"{x:.1e}",
-            key='rho_stellar',
-            help="Stellar mass density. Fiducial: 5.9\u00d710\u2078"
         )
         rho_nsc = st.select_slider(
             "\u03c1_NSC (M\u2609/Mpc\u00b3)",
@@ -710,11 +693,10 @@ if st.session_state['show_muares']:
 gwb_ceiling_curves = {}
 if st.session_state.get('show_gwb_ceilings', False):
     _rho_smbh = st.session_state.get('rho_smbh', RHO_SMBH_FID)
-    _rho_stellar = st.session_state.get('rho_stellar', RHO_STELLAR_FID)
     _rho_nsc = st.session_state.get('rho_nsc', RHO_NSC_FID)
     for _pop_name in POPULATIONS:
         if st.session_state.get(f'show_pop_{_pop_name}', True):
-            _f, _hc = get_population_hc(_pop_name, _rho_smbh, _rho_stellar, _rho_nsc)
+            _f, _hc = get_population_hc(_pop_name, _rho_smbh, _rho_nsc)
             gwb_ceiling_curves[_pop_name] = (_f, _hc)
 
 # Echo sources — optimistic (golden) binary
