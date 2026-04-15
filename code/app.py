@@ -432,7 +432,7 @@ with st.sidebar:
     strain_key = 'h0' if '₀' in strain_convention else 'hc'
     st.caption(
         "**hc**: characteristic strain — standard for PTA/GWB results.  \n"
-        "**h₀**: GW strain amplitude — direct observable, matches Sesana+ 2021."
+        "**h₀**: GW strain amplitude."
     )
     show_labels = st.checkbox("Show curve labels", value=True, key='show_labels',
                                help="Toggle text labels on detector/PTA curves")
