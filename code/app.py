@@ -27,7 +27,7 @@ H0 = H0_km_s_Mpc * 1000.0 / 3.08567758e22
 # SMBH density updated to Liepold & Ma (2024) value
 RHO_SMBH_FID = 1.8e6  # Liepold & Ma (2024), ApJL 971, L29
 RHO_STELLAR_FID = 5.9e8
-RHO_NSC_FID = 3.0e6
+RHO_NSC_FID = 1.4e6
 
 # Population parameters from Table I of Mingarelli (2026), arXiv:2601.18859
 # SMBHB A_bench updated for L&M (2024) density: A = 1.6e-15 at f_ref = 1/yr
@@ -183,7 +183,7 @@ def get_lisa_hc(T_obs_yr, f_min=1e-5, f_max=1.0, nfreqs=1000):
 # NANOGrav 15yr: hasasia built-in NG11 DeterSensitivityCurve (real noise models).
 # IPTA 2050: hasasia sim_pta (131 pulsars, 50yr, 200ns, 26/yr).
 #   - WN-only: white noise only
-#   - WN+RN: with per-pulsar red noise from NG12.5 chromatic noise analysis (arXiv:2511.22597)
+#   - WN+RN: with per-pulsar red noise from NG15 custom noise models (Larsen+ 2026)
 # Precomputed with pta_cw_sensitivity.ipynb; see notebook for full derivation.
 _PTA_CACHE = os.path.join(os.path.dirname(__file__), "pta_sensitivity_curves.npz")
 
@@ -491,18 +491,10 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("Custom PTA")
-    try:
-        import hasasia  # noqa: F401
-        _hasasia_available = True
-    except ImportError:
-        _hasasia_available = False
     show_custom_pta = st.checkbox("Show custom PTA", value=st.session_state['show_custom_pta'],
                                    key='show_custom_pta',
-                                   help="Build your own PTA sensitivity curve",
-                                   disabled=not _hasasia_available)
-    if not _hasasia_available:
-        st.caption("Requires `hasasia` (pip install hasasia)")
-    if show_custom_pta and _hasasia_available:
+                                   help="Build your own PTA sensitivity curve")
+    if show_custom_pta:
         st.slider("Pulsars", 20, 1000,
                    st.session_state['custom_pta_n'], key='custom_pta_n')
         st.slider("Timespan (yr)", 5.0, 50.0,
@@ -520,94 +512,6 @@ with st.sidebar:
                                 value=_cur_label, key='custom_pta_cad_label')
         st.session_state['custom_pta_cad'] = _cad_map[_sel]
 
-
-    st.markdown("---")
-    st.header("Echo Sources")
-    show_inspiral_tracks = st.checkbox("Show inspiral tracks",
-                                        value=False, key='show_inspiral_tracks',
-                                        help="Overlay the full inspiral h_c track "
-                                             "(h₀√(f²/ḟ)) behind each echo source. "
-                                             "Terminates at f_ISCO.")
-
-    # --- Conservative binary (10⁸, 2 Gpc, 10 μHz) ---
-    show_echo_conservative = st.checkbox("Conservative (10⁸ M☉, 2 Gpc)", value=True,
-                                          key='show_echo_conservative',
-                                          help="Most common mass, far away — weakest but guaranteed. Green markers.")
-    if show_echo_conservative:
-        with st.expander("Conservative binary parameters"):
-            echo3_M = st.select_slider("Total mass (M☉)  ★",
-                                        options=[3e7, 1e8, 3e8, 5e8],
-                                        value=1e8, format_func=lambda x: f"{x:.0e}",
-                                        key='echo3_M')
-            _f_isco3 = f_isco_schwarzschild(echo3_M)
-            st.caption(f"f_ISCO = {_f_isco3:.2e} Hz  ({_f_isco3*1e6:.1f} μHz)")
-            echo3_q = st.slider("Mass ratio q  ★", 0.1, 1.0, 1.0, step=0.1, key='echo3_q')
-            echo3_DL = st.slider("D_L (Mpc)  ★", 100, 5000, 2000, step=50, key='echo3_DL')
-            echo3_fE = st.select_slider("f_earth (Hz)  ★",
-                                         options=[1e-6, 3e-6, 1e-5, 3e-5, 1e-4],
-                                         value=1e-5, format_func=lambda x: f"{x:.0e}",
-                                         key='echo3_fE')
-
-    # --- Typical binary (5×10⁸, 200 Mpc, 1 μHz) ---
-    show_echo_typical = st.checkbox("Typical (5×10⁸ M☉, 200 Mpc)", value=True,
-                                      key='show_echo_typical',
-                                      help="At the echo detection boundary (Tier 1). Orange markers.")
-    if show_echo_typical:
-        with st.expander("Typical binary parameters"):
-            echo2_M = st.select_slider("Total mass (M☉) ",
-                                        options=[1e8, 3e8, 5e8, 7e8, 1e9, 2e9],
-                                        value=5e8, format_func=lambda x: f"{x:.0e}",
-                                        key='echo2_M')
-            _f_isco2 = f_isco_schwarzschild(echo2_M)
-            st.caption(f"f_ISCO = {_f_isco2:.2e} Hz  ({_f_isco2*1e6:.1f} μHz)")
-            echo2_q = st.slider("Mass ratio q ", 0.1, 1.0, 1.0, step=0.1, key='echo2_q')
-            echo2_DL = st.slider("D_L (Mpc) ", 10, 2000, 200, step=10, key='echo2_DL')
-            echo2_fE = st.select_slider("f_earth (Hz) ",
-                                         options=[3e-8, 1e-7, 3e-7, 1e-6, 3e-6, 1e-5],
-                                         value=1e-6, format_func=lambda x: f"{x:.0e}",
-                                         key='echo2_fE')
-
-    # --- Optimistic binary (10⁹, 100 Mpc, 1 μHz) ---
-    show_echo_optimistic = st.checkbox("Optimistic (10⁹ M☉, 100 Mpc)", value=True,
-                                        key='show_echo_optimistic',
-                                        help="Golden binary — rare but spectacular. Blue markers.")
-    if show_echo_optimistic:
-        with st.expander("Optimistic binary parameters"):
-            echo1_M = st.select_slider("Total mass (M☉)",
-                                        options=[1e8, 3e8, 5e8, 7e8, 1e9, 2e9, 3e9, 5e9, 1e10],
-                                        value=1e9, format_func=lambda x: f"{x:.0e}",
-                                        key='echo1_M')
-            _f_isco1 = f_isco_schwarzschild(echo1_M)
-            st.caption(f"f_ISCO = {_f_isco1:.2e} Hz  ({_f_isco1*1e6:.1f} μHz)")
-            echo1_q = st.slider("Mass ratio q", 0.1, 1.0, 1.0, step=0.1, key='echo1_q')
-            echo1_DL = st.slider("D_L (Mpc)", 10, 1000, 100, step=10, key='echo1_DL')
-            echo1_fE = st.select_slider("f_earth (Hz)",
-                                         options=[3e-8, 1e-7, 3e-7, 1e-6, 3e-6,
-                                                  1e-5, 3e-5, 1e-4],
-                                         value=1e-6, format_func=lambda x: f"{x:.0e}",
-                                         key='echo1_fE')
-
-    # --- Custom binary (wide parameter ranges) ---
-    show_echo_lisa = st.checkbox("Custom source", value=False,
-                                   key='show_echo_lisa',
-                                   help="Fully adjustable echo source — covers nHz through mHz. Purple markers.")
-    if show_echo_lisa:
-        with st.expander("Custom binary parameters", expanded=True):
-            echo4_M = st.select_slider("Total mass (M☉)  ◆",
-                                        options=[1e6, 1e7, 1e8, 3e8, 5e8, 7e8,
-                                                 1e9, 2e9, 3e9, 5e9, 1e10],
-                                        value=1e9, format_func=lambda x: f"{x:.0e}",
-                                        key='echo4_M')
-            _f_isco4 = f_isco_schwarzschild(echo4_M)
-            st.caption(f"f_ISCO = {_f_isco4:.2e} Hz ({_f_isco4*1e6:.1f} μHz)")
-            echo4_q = st.slider("Mass ratio q  ◆", 0.01, 1.0, 1.0, step=0.01, key='echo4_q')
-            echo4_DL = st.slider("D_L (Mpc)  ◆", 1, 5000, 100, step=1, key='echo4_DL')
-            _fE_nHz = st.slider("f_earth (nHz)  ◆",
-                                min_value=1, max_value=1000, value=1000, step=20,
-                                key='echo4_fE_nHz',
-                                help="Earth-term GW frequency in nHz (20 nHz steps)")
-            echo4_fE = _fE_nHz * 1e-9
-            st.caption(f"f_earth = {echo4_fE:.2e} Hz")
 
     st.markdown("---")
     st.header("GWB Ceilings")
@@ -650,6 +554,91 @@ with st.sidebar:
             key='rho_nsc',
             help="Nuclear star cluster mass density. Fiducial: 1.4\u00d710\u2076"
         )
+
+    st.markdown("---")
+    st.header("Echo Sources")
+
+    show_inspiral_tracks = st.checkbox("Show inspiral tracks",
+                                        value=False, key='show_inspiral_tracks',
+                                        help="Overlay the full inspiral h_c track "
+                                             "(h₀√(f²/ḟ)) behind each echo source. "
+                                             "Terminates at f_ISCO.")
+
+    # --- Conservative binary (10⁸, 2 Gpc, 10 μHz) ---
+    show_echo_conservative = st.checkbox("Conservative (10⁸ M☉, 2 Gpc)", value=True,
+                                          key='show_echo_conservative',
+                                          help="Most common mass, far away — weakest but guaranteed. Green markers.")
+    if show_echo_conservative:
+        with st.expander("Conservative binary parameters"):
+            echo3_M = st.select_slider("Total mass (M☉)  ★",
+                                        options=[3e7, 1e8, 3e8, 5e8],
+                                        value=1e8, format_func=lambda x: f"{x:.0e}",
+                                        key='echo3_M')
+            _f_isco3 = f_isco_schwarzschild(echo3_M)
+            st.caption(f"f_ISCO = {_f_isco3:.2e} Hz  ({_f_isco3*1e6:.1f} μHz)")
+            echo3_q = st.slider("Mass ratio q  ★", 0.1, 1.0, 1.0, step=0.1, key='echo3_q')
+            echo3_DL = st.slider("D_L (Mpc)  ★", 100, 5000, 2000, step=50, key='echo3_DL')
+            echo3_fE = st.select_slider("f_earth (Hz)  ★",
+                                         options=[1e-6, 3e-6, 1e-5, 3e-5, 1e-4],
+                                         value=1e-5, format_func=lambda x: f"{x:.0e}",
+                                         key='echo3_fE')
+
+    # --- Typical binary (6×10⁸, 200 Mpc, 1 μHz) ---
+    show_echo_typical = st.checkbox("Typical (6×10⁸ M☉, 200 Mpc)", value=True,
+                                      key='show_echo_typical',
+                                      help="At the echo detection boundary (Tier 1). Orange markers.")
+    if show_echo_typical:
+        with st.expander("Typical binary parameters"):
+            echo2_M = st.select_slider("Total mass (M☉) ",
+                                        options=[1e8, 3e8, 5e8, 6e8, 1e9],
+                                        value=6e8, format_func=lambda x: f"{x:.0e}",
+                                        key='echo2_M')
+            _f_isco2 = f_isco_schwarzschild(echo2_M)
+            st.caption(f"f_ISCO = {_f_isco2:.2e} Hz  ({_f_isco2*1e6:.1f} μHz)")
+            echo2_q = st.slider("Mass ratio q ", 0.1, 1.0, 1.0, step=0.1, key='echo2_q')
+            echo2_DL = st.slider("D_L (Mpc) ", 10, 2000, 200, step=10, key='echo2_DL')
+            echo2_fE = st.select_slider("f_earth (Hz) ",
+                                         options=[1e-7, 3e-7, 1e-6, 3e-6, 1e-5],
+                                         value=1e-6, format_func=lambda x: f"{x:.0e}",
+                                         key='echo2_fE')
+
+    # --- Optimistic binary (10⁹, 100 Mpc, 1 μHz) ---
+    show_echo_optimistic = st.checkbox("Optimistic (10⁹ M☉, 100 Mpc)", value=True,
+                                        key='show_echo_optimistic',
+                                        help="Golden binary — rare but spectacular. Blue markers.")
+    if show_echo_optimistic:
+        with st.expander("Optimistic binary parameters"):
+            echo1_M = st.select_slider("Total mass (M☉)",
+                                        options=[1e8, 3e8, 5e8, 1e9, 2e9, 3e9, 5e9, 1e10],
+                                        value=1e9, format_func=lambda x: f"{x:.0e}",
+                                        key='echo1_M')
+            _f_isco1 = f_isco_schwarzschild(echo1_M)
+            st.caption(f"f_ISCO = {_f_isco1:.2e} Hz  ({_f_isco1*1e6:.1f} μHz)")
+            echo1_q = st.slider("Mass ratio q", 0.1, 1.0, 1.0, step=0.1, key='echo1_q')
+            echo1_DL = st.slider("D_L (Mpc)", 10, 1000, 100, step=10, key='echo1_DL')
+            echo1_fE = st.select_slider("f_earth (Hz)",
+                                         options=[1e-7, 3e-7, 1e-6, 3e-6, 1e-5, 3e-5, 1e-4],
+                                         value=1e-6, format_func=lambda x: f"{x:.0e}",
+                                         key='echo1_fE')
+
+    # --- LISA-band binary (10⁶, 100 Mpc, 0.1 mHz) ---
+    show_echo_lisa = st.checkbox("LISA-band (10⁶ M☉, 100 Mpc)", value=False,
+                                   key='show_echo_lisa',
+                                   help="LISA-band source — echoes completely undetectable. Red markers.")
+    if show_echo_lisa:
+        with st.expander("LISA-band binary parameters"):
+            echo4_M = st.select_slider("Total mass (M☉)  ◆",
+                                        options=[1e5, 3e5, 1e6, 3e6, 1e7],
+                                        value=1e6, format_func=lambda x: f"{x:.0e}",
+                                        key='echo4_M')
+            _f_isco4 = f_isco_schwarzschild(echo4_M)
+            st.caption(f"f_ISCO = {_f_isco4:.2e} Hz ({_f_isco4*1e3:.1f} mHz)")
+            echo4_q = st.slider("Mass ratio q  ◆", 0.1, 1.0, 1.0, step=0.1, key='echo4_q')
+            echo4_DL = st.slider("D_L (Mpc)  ◆", 10, 1000, 100, step=10, key='echo4_DL')
+            echo4_fE = st.select_slider("f_earth (Hz)  ◆",
+                                         options=[3e-5, 1e-4, 3e-4, 1e-3, 3e-3],
+                                         value=1e-4, format_func=lambda x: f"{x:.0e}",
+                                         key='echo4_fE')
 
     st.markdown("---")
     if st.button("Reset to defaults"):
@@ -728,7 +717,7 @@ if st.session_state.get('show_gwb_ceilings', False):
 echo1_earth, echo1_pulsars, echo1_warning = None, [], None
 # Echo sources — typical binary
 echo2_earth, echo2_pulsars, echo2_warning = None, [], None
-# Echo sources — Custom binary
+# Echo sources — LISA-band binary
 echo4_earth, echo4_pulsars, echo4_warning = None, [], None
 # Echo sources — conservative binary
 echo3_earth, echo3_pulsars, echo3_warning = None, [], None
@@ -771,10 +760,10 @@ if st.session_state.get('show_echo_conservative', True):
 
 if st.session_state.get('show_echo_lisa', False):
     echo4_earth, echo4_pulsars, echo4_warning = compute_echo_sources(
-        M_total_msun=st.session_state.get('echo4_M', 1e9),
+        M_total_msun=st.session_state.get('echo4_M', 1e6),
         q=st.session_state.get('echo4_q', 1.0),
         D_L_Mpc=st.session_state.get('echo4_DL', 100),
-        f_earth_Hz=st.session_state.get('echo4_fE_nHz', 1000) * 1e-9,
+        f_earth_Hz=st.session_state.get('echo4_fE', 1e-4),
         n_pulsars=20, T_pta_yr=_T_pta, T_muares_yr=_T_mu, seed=314,
     )
 
@@ -796,7 +785,7 @@ _COL_LISA = '#CC6677'      # rose (LISA)
 _COL_OPT = '#CCBB44'       # olive/gold (optimistic) — distinct from SMBHB blue bg
 _COL_TYP = '#AA3377'       # wine/magenta (typical) — distinct from AGN-IMRI orange bg
 _COL_CON = '#EE7733'       # orange (conservative) — distinct from EMRI green bg
-_COL_LISA_SRC = '#882255'  # dark plum (Custom source)
+_COL_LISA_SRC = '#882255'  # dark plum (LISA-band)
 
 # PTA curve styles
 _pta_styles = {
@@ -824,14 +813,14 @@ ax.set_yscale('log')
 for name, (f, hc, h0) in pta_curves.items():
     sty = _pta_styles.get(name, {'color': '#888888', 'ls': '-'})
     y = h0 if strain_key == 'h0' else hc
-    ax.plot(f, y, color=sty['color'], ls=sty['ls'], lw=1.8, label=name)
+    ax.plot(f, y, color=sty['color'], ls=sty['ls'], lw=2.5, label=name)
 
 
 # ── GWB population ceilings ──
 for _pop_name, (_pf, _phc) in gwb_ceiling_curves.items():
     _pcol = POPULATIONS[_pop_name]['color']
     _plbl = POPULATION_DISPLAY_NAMES.get(_pop_name, _pop_name)
-    ax.plot(_pf, _phc, color=_pcol, ls='--', lw=1.5, label=_plbl, zorder=4)
+    ax.plot(_pf, _phc, color=_pcol, ls='--', lw=2.2, label=_plbl, zorder=4)
     ax.fill_between(_pf, _phc * 0.01, _phc, color=_pcol, alpha=0.10, zorder=2)
 
 # ── Galactic WD confusion noise (one grey curve + fill) ──
@@ -844,17 +833,17 @@ if _conf_to_plot is not None:
         ax.fill_between(_fc[_mask], 1e-25, _hc_conf[_mask],
                         color='#DDDDDD', alpha=0.25, zorder=0)
         ax.plot(_fc[_mask], _hc_conf[_mask], color='#AAAAAA', ls='-',
-                lw=1.5, alpha=0.6, zorder=1, label='Galactic WD foreground')
+                lw=2.2, alpha=0.6, zorder=1, label='Galactic WD foreground')
 
 # ── μAres (instrument only, solid line) ──
 if muares_curve is not None:
     fm, hm = muares_curve
-    ax.plot(fm, hm, color=_COL_MUARES, ls='-', lw=2.0, label='\u03bcAres', zorder=3)
+    ax.plot(fm, hm, color=_COL_MUARES, ls='-', lw=2.8, label='\u03bcAres', zorder=3)
 
 # ── LISA (instrument only, solid line) ──
 if lisa_curve is not None:
     fl, hl = lisa_curve
-    ax.plot(fl, hl, color=_COL_LISA, ls='-', lw=2.0, label='LISA', zorder=3)
+    ax.plot(fl, hl, color=_COL_LISA, ls='-', lw=2.8, label='LISA', zorder=3)
 
 # ── Inspiral track helper ──
 def _plot_inspiral_track(earth, color):
@@ -871,7 +860,7 @@ def _plot_inspiral_track(earth, color):
         track = h0_arr * np.sqrt(f_arr**2 / fdot_arr)
     else:
         track = h0_arr
-    ax.plot(f_arr, track, color=color, ls='-.', lw=1.0, alpha=0.35, zorder=1)
+    ax.plot(f_arr, track, color=color, ls='-.', lw=2.2, alpha=0.5, zorder=1)
 
 # ── Echo source helper ──
 def _plot_echo(earth, pulsars, color, earth_label, psr_label, star_marker='*', psr_marker='o'):
@@ -887,7 +876,7 @@ def _plot_echo(earth, pulsars, color, earth_label, psr_label, star_marker='*', p
         if earth is not None:
             for p in pulsars:
                 ax.plot([p['f'], earth['f']], [p[strain_key], earth[strain_key]],
-                        color=color, ls='-', lw=0.3, alpha=0.15, zorder=1)
+                        color=color, ls='-', lw=0.8, alpha=0.25, zorder=1)
 
 # ── Inspiral tracks (behind everything else) ──
 if st.session_state.get('show_inspiral_tracks', False):
@@ -898,7 +887,7 @@ if st.session_state.get('show_inspiral_tracks', False):
 
 # ── Echo sources ──
 _plot_echo(echo4_earth, echo4_pulsars, _COL_LISA_SRC,
-           'Earth term (Custom)', 'Pulsar terms (Custom)', psr_marker='s')
+           'Earth term (LISA-band)', 'Pulsar terms (LISA-band)', psr_marker='s')
 _plot_echo(echo3_earth, echo3_pulsars, _COL_CON,
            'Earth term (conservative)', 'Pulsar terms (conservative)', psr_marker='^')
 _plot_echo(echo2_earth, echo2_pulsars, _COL_TYP,
@@ -921,14 +910,12 @@ ax.grid(True, which='minor', alpha=0.06, ls='-', lw=0.3)
 if st.session_state.get('show_labels', True):
     if muares_curve is not None:
         fm, hm = muares_curve
-        # Place label at a fixed frequency well inside the plot
-        idx = np.argmin(np.abs(fm - 3e-5))
+        idx = np.argmin(hm)
         ax.text(fm[idx], hm[idx]*0.35, '\u03bcAres', fontsize=15,
                 color=_COL_MUARES, fontweight='bold', ha='center', va='top')
     if lisa_curve is not None:
         fl, hl = lisa_curve
-        # Place label at a fixed frequency well inside the plot
-        idx = np.argmin(np.abs(fl - 3e-4))
+        idx = np.argmin(hl)
         ax.text(fl[idx], hl[idx]*0.35, 'LISA', fontsize=15,
                 color=_COL_LISA, fontweight='bold', ha='center', va='top')
 
@@ -969,7 +956,7 @@ if st.session_state.get('show_legends', True):
                                        markeredgecolor='white', markeredgewidth=0.5))
         # Add inspiral track entry if tracks are shown
         if st.session_state.get('show_inspiral_tracks', False):
-            src_handles.append(Line2D([0], [0], color='grey', ls='-.', lw=1.0, alpha=0.5))
+            src_handles.append(Line2D([0], [0], color='grey', ls='-.', lw=2.2, alpha=0.5))
             src_labels = [labels[i] for i in src_idx] + ['Inspiral track']
         else:
             src_labels = [labels[i] for i in src_idx]
@@ -980,10 +967,7 @@ if st.session_state.get('show_legends', True):
                   borderpad=0.4, columnspacing=1.0, handlelength=1.8,
                   title='Echo Sources', title_fontsize=14)
 
-try:
-    fig.tight_layout()
-except ValueError:
-    pass
+fig.tight_layout()
 st.pyplot(fig)
 
 # =============================================================================
@@ -1047,7 +1031,7 @@ if _any_echoes:
     st.subheader("Echo Source Parameters")
 
     for label, e_earth, e_pulsars, e_warn, pfx_key in [
-        ("Custom (purple)", echo4_earth, echo4_pulsars, echo4_warning, 'echo4'),
+        ("LISA-band (red)", echo4_earth, echo4_pulsars, echo4_warning, 'echo4'),
         ("Conservative (green)", echo3_earth, echo3_pulsars, echo3_warning, 'echo3'),
         ("Typical (orange)", echo2_earth, echo2_pulsars, echo2_warning, 'echo2'),
         ("Optimistic (blue)", echo1_earth, echo1_pulsars, echo1_warning, 'echo1'),
@@ -1056,7 +1040,7 @@ if _any_echoes:
             continue
         if e_warn:
             st.warning(e_warn)
-        _defaults = {'echo1': (1e9, 1.0, 100), 'echo2': (6e8, 1.0, 200), 'echo3': (1e8, 1.0, 2000), 'echo4': (1e9, 1.0, 100)}
+        _defaults = {'echo1': (1e9, 1.0, 100), 'echo2': (6e8, 1.0, 200), 'echo3': (1e8, 1.0, 2000), 'echo4': (1e6, 1.0, 100)}
         _dM, _dq, _dDL = _defaults.get(pfx_key, (1e9, 1.0, 100))
         _M = st.session_state.get(f'{pfx_key}_M', _dM)
         _q = st.session_state.get(f'{pfx_key}_q', _dq)
@@ -1090,8 +1074,8 @@ st.markdown("---")
 st.subheader("PTA Red Noise Assumptions")
 st.markdown("""
 The IPTA 2050 curves include per-pulsar intrinsic
-red noise drawn from the ranges measured in the NANOGrav 12.5-year chromatic
-noise analysis ([arXiv:2511.22597](https://arxiv.org/abs/2511.22597)): amplitudes log₁₀A uniformly
+red noise drawn from the ranges measured in the NANOGrav 15yr custom chromatic
+noise models (Larsen, Baier et al. 2026, Tables 5–6): amplitudes log₁₀A uniformly
 distributed in [−15, −12] and spectral indices γ uniformly distributed in [1, 5].
 Red noise is injected into the pulsar noise covariance matrix via hasasia's
 `sim_pta`. The "WN only" curves use white noise alone (σ = 200 ns) for comparison.
@@ -1106,6 +1090,6 @@ st.markdown("""
 - **\u03bcAres**: Sesana et al. (2021), Exp. Astron. 51, 1333, [arXiv:1908.11391](https://arxiv.org/abs/1908.11391)
 - **PTA sensitivity formalism**: Hazboun, Romano & Smith (2019), PRD 100, 104028;
   NANOGrav curve via [hasasia](https://github.com/Hazboun6/hasasia) (deterministic CW sensitivity)
-- **NANOGrav noise models**: NANOGrav 12.5-year chromatic noise analysis, [arXiv:2511.22597](https://arxiv.org/abs/2511.22597)
+- **NANOGrav noise models**: Larsen, Baier, Oliver et al. (2026); Agazie et al. (2023)
 - **gwent**: [github.com/ark0015/gwent](https://github.com/ark0015/gwent)
 """)
