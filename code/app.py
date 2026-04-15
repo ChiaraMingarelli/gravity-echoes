@@ -180,7 +180,10 @@ def get_lisa_hc(T_obs_yr, f_min=1e-5, f_max=1.0, nfreqs=1000):
 
 
 # ── Precomputed PTA sensitivity curves ──
-# NANOGrav 15yr: hasasia built-in NG11 DeterSensitivityCurve (real noise models).
+# NANOGrav 15yr: NG11 hasasia DeterSensitivityCurve rescaled to match the
+#   published NG15 CW 95% UL of 8e-15 at 6 nHz (Agazie+ 2023, arXiv:2306.16222).
+#   Bucket shifted from 3.8 nHz (NG11) to 6 nHz (NG15) and amplitude scaled
+#   by 1.38x, assuming UL/sensitivity ~ 2.5x. See pta_cw_sensitivity.ipynb.
 # IPTA 2050: hasasia sim_pta (131 pulsars, 50yr, 200ns, 26/yr).
 #   - WN-only: white noise only
 #   - WN+RN: with per-pulsar red noise from NG15 custom noise models (Larsen+ 2026)
@@ -364,9 +367,10 @@ def compute_echo_sources(M_total_msun, q, D_L_Mpc, f_earth_Hz,
 # Fixed PTA arrays (always shown, not user-configurable)
 PTA_FIXED = {
     'NANOGrav 15yr': {
-        'n_pulsars': 67, 'timespan': 15.0, 'sigma_ns': 300, 'cadence': 26,
+        'n_pulsars': 67, 'timespan': 16.0, 'sigma_ns': 600, 'cadence': 26,
         'color': '#DDCC77', 'ls': '-',
-        'description': '67 pulsars, 15 yr (Agazie+ 2023)',
+        'description': '67 pulsars, 16 yr, median σ_TOA ~ 600 ns (Agazie+ 2023). '
+                       'Curve rescaled from NG11 hasasia to match published CW 95% UL.',
     },
     'IPTA 2050': {
         'n_pulsars': 131, 'timespan': 50.0, 'sigma_ns': 200, 'cadence': 52,
@@ -652,7 +656,7 @@ with st.sidebar:
 pta_curves = {}  # name -> (f, hc, h0)
 _pta_data = _load_pta_curves()
 
-# NANOGrav 15yr — precomputed from hasasia built-in (real noise models)
+# NANOGrav 15yr — NG11 hasasia rescaled to NG15 published CW UL (Agazie+ 2023)
 if st.session_state.get('show_nanograv', True):
     pta_curves['NANOGrav 15yr'] = _pta_data['ng15']
 
@@ -910,12 +914,12 @@ ax.grid(True, which='minor', alpha=0.06, ls='-', lw=0.3)
 if st.session_state.get('show_labels', True):
     if muares_curve is not None:
         fm, hm = muares_curve
-        idx = np.argmin(np.abs(fm - 1e-4))
+        idx = np.argmin(hm)
         ax.text(fm[idx], hm[idx]*0.35, '\u03bcAres', fontsize=15,
                 color=_COL_MUARES, fontweight='bold', ha='center', va='top')
     if lisa_curve is not None:
         fl, hl = lisa_curve
-        idx = np.argmin(np.abs(fl - 1e-5))
+        idx = np.argmin(hl)
         ax.text(fl[idx], hl[idx]*0.35, 'LISA', fontsize=15,
                 color=_COL_LISA, fontweight='bold', ha='center', va='top')
 
@@ -1089,7 +1093,9 @@ st.markdown("""
 - **LISA**: Amaro-Seoane et al. (2017), [arXiv:1702.00786](https://arxiv.org/abs/1702.00786)
 - **\u03bcAres**: Sesana et al. (2021), Exp. Astron. 51, 1333, [arXiv:1908.11391](https://arxiv.org/abs/1908.11391)
 - **PTA sensitivity formalism**: Hazboun, Romano & Smith (2019), PRD 100, 104028;
-  NANOGrav curve via [hasasia](https://github.com/Hazboun6/hasasia) (deterministic CW sensitivity)
-- **NANOGrav noise models**: Larsen, Baier, Oliver et al. (2026); Agazie et al. (2023)
+  curves via [hasasia](https://github.com/Hazboun6/hasasia) (deterministic CW sensitivity)
+- **NANOGrav 15yr CW limits**: Agazie, Anumarlapudi et al. (2023), [arXiv:2306.16222](https://arxiv.org/abs/2306.16222).
+  Curve rescaled from NG11 hasasia to match published 95% UL of 8\u00d710\u207b\u00b9\u2075 at 6 nHz.
+- **IPTA 2050 noise models**: Larsen, Baier, Oliver et al. (2026); Agazie et al. (2023)
 - **gwent**: [github.com/ark0015/gwent](https://github.com/ark0015/gwent)
 """)
