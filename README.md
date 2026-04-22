@@ -86,19 +86,6 @@ pdflatex restructured-echo
 
 Requires a LaTeX distribution with RevTeX 4.2 (included in this repository).
 
-## Citation
-
-If you use this code, please cite:
-
-```bibtex
-@article{Zheng2026,
-  author  = {Zheng, Qinyuan and B{\'e}csy, Bence and Mingarelli, Chiara M. F.},
-  title   = {Gravity Echoes from Supermassive Black Hole Binaries},
-  journal = {Physical Review X},
-  year    = {2026}
-}
-```
-
 ## License
 
 This code is released under the MIT License.
