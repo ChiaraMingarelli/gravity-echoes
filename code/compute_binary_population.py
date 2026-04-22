@@ -431,45 +431,41 @@ print()
 
 
 # =============================================================================
-# 7. Bence's scaling check: (76/108)^3 applied to MASSIVE count
+# 7. Volume scaling check: (76/108)^3 applied to MASSIVE count
 # =============================================================================
 print("=" * 72)
-print("6. BENCE'S SCALING: MASSIVE vol -> 76 Mpc")
+print("7. VOLUME SCALING: MASSIVE vol -> 76 Mpc")
 print("=" * 72)
 
-# Bence suggests: 250 * (76/108)^3 ~ 87 within 76 Mpc.
-# But this applies (76/108)^3 to the MASSIVE survey count (250),
-# which already covers only 41.9% of the sky. The correct scaling
-# depends on what we mean:
+# Two ways to scale the MASSIVE count to 76 Mpc.
 #
-# (a) 250 in MASSIVE vol (2.05e6 Mpc^3, partial sky)
-#     -> n = 250/2.05e6 = 1.22e-4 Mpc^-3
-#     -> N(full sphere, 76 Mpc) = n * (4/3)pi(76)^3 = 224
+# (a) Full-sphere scaling from the number density implied by LM24:
+#     n = 250 / 2.05e6 Mpc^-3 = 1.22e-4 Mpc^-3
+#     N(full sphere, 76 Mpc) = n * (4/3)pi(76)^3 = 224
 #
-# (b) Bence's simple scaling: 250 * (76/108)^3 = 87
-#     This implicitly treats 250 as a full-sphere count at 108 Mpc,
-#     but 250 is the MASSIVE count (partial sky). If the paper says
-#     "250 within 108 Mpc" without specifying MASSIVE sky coverage,
-#     then 87 is a valid full-sky extrapolation.
+# (b) Homogeneous volume scaling at fixed sky fraction:
+#     250 * (76/108)^3 ~ 87
+#     Correct if 250 is the count in a partial sky that scales
+#     homogeneously to 76 Mpc.
+#
+# (a) is the full-sky number; (b) is the same sky fraction as MASSIVE.
 
 vol_ratio = (D_tier3 / D_MASSIVE)**3
-N_bence = N_MASSIVE_LM24 * vol_ratio
+N_partial = N_MASSIVE_LM24 * vol_ratio
 N_correct = n_above_9_LM24 * V_full_76
 
 print(f"LM24 reports ~{N_MASSIVE_LM24} in MASSIVE vol (41.9% sky, 108 Mpc)")
-print(f"Bence scaling: {N_MASSIVE_LM24} * (76/108)^3 = {N_bence:.0f}")
-print(f"  -> This is correct IF 250 is treated as the count within a")
-print(f"     partial volume that scales homogeneously to 76 Mpc.")
+print(f"Partial-sky scaling: {N_MASSIVE_LM24} * (76/108)^3 = {N_partial:.0f}")
+print(f"  -> count in the same sky fraction at 76 Mpc.")
 print()
 print(f"Full-sphere scaling from number density:")
 print(f"  n = {N_MASSIVE_LM24}/2.05e6 = {n_above_9_LM24:.2e} Mpc^-3")
 print(f"  N(full sphere, 76 Mpc) = {N_correct:.0f}")
 print()
-print(f"The distinction matters for the paper text. Line 430 says:")
-print(f"  '~500 SMBHs above 10^9 within 108 Mpc'")
-print(f"If this means the MASSIVE survey volume (partial sky), then")
-print(f"Bence's (76/108)^3 scaling gives ~{N_bence:.0f} in the same sky fraction")
-print(f"at 76 Mpc, or ~{N_correct:.0f} for the full sphere at 76 Mpc.")
+print(f"Interpretation: ~500 SMBHs above 10^9 within 108 Mpc is the")
+print(f"MASSIVE (partial-sky) count. The (76/108)^3 scaling gives")
+print(f"~{N_partial:.0f} in the same sky fraction at 76 Mpc, or ~{N_correct:.0f}")
+print(f"for the full sphere at 76 Mpc.")
 print()
 
 
@@ -485,7 +481,7 @@ print(f"{'LM24 BHMF: N(>10^9) in MASSIVE vol':<55} {'~500':>15}")
 print(f"{'  -> number density n [Mpc^-3]':<55} {n_above_9_LM24:>15.2e}")
 print(f"{'N(>10^9, full sphere, 108 Mpc)':<55} {N_full_108:>15.0f}")
 print(f"{'N(>10^9, full sphere, 76 Mpc)':<55} {N_full_76:>15.0f}")
-print(f"{'N(>10^9, Bence scaling: 250*(76/108)^3)':<55} {N_bence:>15.0f}")
+print(f"{'N(>10^9, partial-sky: 250*(76/108)^3)':<55} {N_partial:>15.0f}")
 print(f"{'CC25 F_BHB':<55} {'2.6%':>15}")
 print(f"{'  95% CI':<55} {'0.8% -- 7.4%':>15}")
 print(f"{'N_SMBHB (PTA band, 76 Mpc, median)':<55} {N_bin_76:>15.1f}")

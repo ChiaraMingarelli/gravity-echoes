@@ -6,9 +6,13 @@ key number in "Gravity Echoes from SMBHB" from first principles.
 Uses smbhb_evolution.py and phase_matching.py functions.
 """
 
-import numpy as np
+import os
 import sys
-sys.path.insert(0, '/sessions/dazzling-bold-galileo/mnt/gravity-echo')
+
+import numpy as np
+
+# Make the local code/ directory importable regardless of the cwd.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from smbhb_evolution import SMBHBEvolution, G_SI, C_SI, M_SUN, PC, MPC, YR
 from phase_matching import (
@@ -320,11 +324,8 @@ print("6. POPULATION ESTIMATE")
 print("=" * 80)
 
 # 6a. LM24 BHMF: N(>10^9 Msun) within MASSIVE vol (108 Mpc)
-# Post BHMF bug fix (session 3): density = 2.50e-4 Mpc^-3 -> N = 513.
+# Integrating the LM24 mass function gives density = 2.50e-4 Mpc^-3 -> N = 513.
 # Source of truth is compute_binary_population.py Section 6a.
-# Former check(513, 513) removed (pure tautology).
-# Independent cross-check (direct Riemann sum over fine log-M grid vs
-# scipy.integrate.quad) lives in crosscheck_N_SMBH.py.
 print(f"\n  N(>10^9) in MASSIVE vol (108 Mpc) = 513 [source: compute_binary_population.py]")
 
 # 6b. Number of candidate hosts for M_BH = 5e8 in 0.2-dex bin

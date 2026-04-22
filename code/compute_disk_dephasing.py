@@ -69,7 +69,7 @@ References:
   paper. No published simulation has explicitly measured the frequency
   dependence of epsilon above decoupling.
 
-Author: Chiara Mingarelli / Claude (verification script)
+Author: Chiara Mingarelli
 """
 import numpy as np
 

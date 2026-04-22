@@ -14,7 +14,7 @@ Key questions:
 3. What is the false alarm probability of a coincident match?
 4. How does sky localization improve with echo detections?
 
-Author: Chiara Mingarelli, with computational assistance
+Author: Chiara Mingarelli
 """
 
 import numpy as np

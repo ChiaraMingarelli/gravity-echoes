@@ -1,7 +1,7 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*.egg-info/
 .ipynb_checkpoints/
 
 # LaTeX build artifacts
@@ -10,15 +10,21 @@ __pycache__/
 *.blg
 *.log
 *.out
-*.synctex.gz
+*.toc
+*.lof
+*.lot
 *.fls
 *.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
 *Notes.bib
 
-# macOS
+# Editor / OS
 .DS_Store
-
-# Editor
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
@@ -26,3 +32,7 @@ __pycache__/
 # Environment
 .env
 .venv/
+
+# Local scratch
+tmp*
+scratch/
