@@ -72,7 +72,7 @@ Mc_msun = M_tot_msun * eta**0.6
 Mc_kg = M_tot_kg * eta**0.6
 # Golden-binary distance per restructured-echo.tex Sec 5 (80 Mpc).
 # The Tier-3 IPTA echo horizon is computed at 76 Mpc by compute_table3.py
-# and intentionally rounded to 80 Mpc in Table III. All golden-binary
+# and intentionally rounded to 80 Mpc in Table II. All golden-binary
 # checks in this script use 80 Mpc.
 D_L_Mpc = 80.0
 D_L_m = D_L_Mpc * MPC

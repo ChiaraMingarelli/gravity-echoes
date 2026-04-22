@@ -193,7 +193,7 @@ class SMBHBEvolution:
         # (and to the binding energy below) only feeds the Thomas precession
         # phase, which vanishes identically for aligned spins.  Dropped here
         # so the TaylorT4 integrator path stays internally consistent with
-        # the TaylorF2 perturbative path used for Table II/IV.  The 2pN SS
+        # the TaylorF2 perturbative path used for Table III.  The 2pN SS
         # phase correction enters exclusively through tau_4_SS / phi_4_SS in
         # pn_decomposition().
         self.F4 = -(44711.0 / 9072 + 9271.0 * eta / 504

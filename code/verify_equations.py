@@ -545,11 +545,11 @@ check("muAres parameters consistent with Sesana+ 2021", True)
 print()
 
 # ============================================================
-# 21. CROSS-CHECK: Table III values
+# 21. CROSS-CHECK: Table II values
 # ============================================================
 print("-" * 72)
-print("21. Table III cross-check at 100 Mpc")
-print("    Paper: Table III [tab:horizon]")
+print("21. Table II cross-check at 100 Mpc")
+print("    Paper: Table II [tab:horizon]")
 print("    Verified by: compute_table3.py")
 print("-" * 72)
 
@@ -605,7 +605,7 @@ warn("phase_matching.pn_cycles()",
      "Standalone cycle counter with DIFFERENT coefficients than smbhb_evolution. "
      "Uses 3/(128*2pi*eta) prefactor = 3/(256 pi eta). "
      "1.5pN SO term is simplified (113/6 * chi for equal mass aligned). "
-     "Not used for paper Table II — smbhb_evolution.pn_decomposition() is authoritative.")
+     "Not used for paper Table III — smbhb_evolution.pn_decomposition() is authoritative.")
 
 print()
 

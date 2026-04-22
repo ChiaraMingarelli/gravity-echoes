@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-compute_table3.py — Canonical computation of Table III (tab:horizon).
+compute_table3.py — Canonical computation of Table II (tab:horizon).
+(Filename retained for backwards compatibility; paper numbering changed
+when the tables were reordered.)
 
 Echo detectability for 10^9 Msun equal-mass, face-on binary at f_E = 1 uHz.
 Reports rho_comb, N_det at 100 Mpc; horizon distances for three tiers.
@@ -193,7 +195,7 @@ def find_horizons(Fp_arr, Fc_arr, tau_arr, N_obs, sigma, is_anchor, label):
 
 def main():
     print("=" * 70)
-    print("Table III — Echo detectability")
+    print("Table II — Echo detectability")
     print(f"  h_0 convention: prefactor 4  [Eq. (2)]")
     print(f"  Tier 2 threshold: rho_i >= {RHO_TIER2:.0f}")
     print(f"  Tier 3 threshold: rho_i >= {RHO_TIER3:.0f} (anchors)")
@@ -218,7 +220,7 @@ def main():
 
     # Summary table
     print("=" * 70)
-    print("SUMMARY (for paper Table III)")
+    print("SUMMARY (for paper Table II)")
     print("=" * 70)
     fmt = "{:<30s} | {:>6s} | {:>5s} | {:>6s} | {:>6s} | {:>6s}"
     print(fmt.format("Array", "rho", "N_det", "T1", "T2", "T3"))
@@ -226,11 +228,11 @@ def main():
     for name, (rho, ndet, t1, t2, t3) in results.items():
         print(fmt.format(name, f"{rho:.1f}", f"{ndet}", f"{t1}", f"{t2}", f"{t3}"))
 
-    # Note: formerly this script printed a "Paper Table III values" block
+    # Note: formerly this script printed a "Paper Table II values" block
     # with hardcoded numbers. Those numbers were themselves produced by
     # running this script, so the comparison was tautological. The
     # SUMMARY table above (populated from `results`) is the single
-    # source of truth for Table III. The paper quotes IPTA/Combined
+    # source of truth for Table II. The paper quotes IPTA/Combined
     # Tier-3 as 80 Mpc (rounded from 76, see project_tier3_conventions.md).
 
 

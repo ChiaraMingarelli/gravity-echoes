@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-compute_delta_f.py — Frequency shift at each pN order for Table II.
+compute_delta_f.py — Frequency shift at each pN order for Table III.
 
 For each scenario and pulsar, compute f_P by solving the TaylorT2 time
 equation at successive pN orders:

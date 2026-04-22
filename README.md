@@ -8,10 +8,6 @@ This repository contains the post-Newtonian evolution library, analysis scripts,
 
 ```
 gravity-echoes/
-├── paper/                          LaTeX source and bibliography
-│   ├── restructured-echo.tex
-│   ├── references.bib
-│   └── (RevTeX 4.2 style files)
 ├── figures/                        Figures included in the paper
 ├── code/
 │   ├── smbhb_evolution.py          Core post-Newtonian SMBHB evolution library
@@ -23,13 +19,13 @@ gravity-echoes/
 │   ├── echo_horizon.py             Fig. 4: echo detectability contours
 │   ├── plot_pn_phases.py           Fig. 5: cumulative GW cycles by pN order
 │   │
-│   ├── compute_table2.py           Table II: echo parameters for fiducial scenarios
-│   ├── compute_table3.py           Table III: combined-SNR horizons by tier
-│   ├── compute_delta_f.py          Table II frequency-shift columns
+│   ├── compute_table2.py           Table III: echo parameters for fiducial scenarios
+│   ├── compute_table3.py           Table II: combined-SNR horizons by tier
+│   ├── compute_delta_f.py          Table III frequency-shift columns
 │   │
 │   ├── compute_rho_E.py            Earth-term SNR and sigma_chi^(E) Fisher calc
 │   ├── compute_sigma_chi_pulsar.py Single-pulsar sigma_chi (Eq. sigma_chi_prior)
-│   ├── compute_sigma_chi_network.py Network Fisher-sum sigma_chi (Appendix C)
+│   ├── compute_sigma_chi_network.py Network Fisher-sum sigma_chi (Appendix D)
 │   ├── compute_fp_shift.py         Pulsar-term frequency shift Delta f_P
 │   ├── compute_beta.py             Spin-orbit parameter beta
 │   ├── compute_disk_dephasing.py   Circumbinary disk dephasing
@@ -46,6 +42,8 @@ gravity-echoes/
 ├── .gitignore
 └── README.md
 ```
+
+Note: file names retain the original numbering (`compute_table2.py`, `compute_table3.py`); the paper's table numbering changed when Tables II and III were reordered.
 
 ## Installation
 
@@ -85,9 +83,9 @@ Figures 1 (multiband sensitivity landscape) and 2 (sky localization) are produce
 
 ```bash
 cd code
-python compute_table2.py           # Table II
-python compute_table3.py           # Table III
-python compute_delta_f.py          # Table II frequency-shift columns
+python compute_table2.py           # Table III (fiducial scenarios)
+python compute_table3.py           # Table II  (combined-SNR horizons)
+python compute_delta_f.py          # Table III frequency-shift columns
 ```
 
 Table I is an input-configuration table and has no generator.
@@ -105,18 +103,6 @@ python crosscheck_cycle_counts.py  # pN cycle counts
 python crosscheck_horizon.py       # horizon distances
 python crosscheck_sigma_chi.py     # sigma_chi
 ```
-
-## Compiling the paper
-
-```bash
-cd paper
-pdflatex restructured-echo
-bibtex restructured-echo
-pdflatex restructured-echo
-pdflatex restructured-echo
-```
-
-Requires a LaTeX distribution with RevTeX 4.2 (style files included in `paper/`).
 
 ## License
 

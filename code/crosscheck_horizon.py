@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-crosscheck_horizon.py -- Independent verification of Table III horizons.
+crosscheck_horizon.py -- Independent verification of Table II horizons.
 
 compute_table3.py uses the closed-form monochromatic matched-filter SNR
 

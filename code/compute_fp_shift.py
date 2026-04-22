@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 compute_fp_shift.py — Pulsar-term frequency shift from omitting spin,
-computed with the SAME TaylorT2 machinery used for Table II.
+computed with the SAME TaylorT2 machinery used for Table III.
 
-Uses smbhb_evolution.py so that f_P values are identical to Table II when
+Uses smbhb_evolution.py so that f_P values are identical to Table III when
 spin is on (chi = 0.98 aligned) and to a chi = 0 "no-spin template" when
 spin is off.  This avoids the TaylorT2/TaylorF2 reorganization mismatch
 between a standalone integration and the library.

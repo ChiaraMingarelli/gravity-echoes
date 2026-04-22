@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-compute_table2.py — Canonical computation of Table II (tab:scenarios).
+compute_table2.py — Canonical computation of Table III (tab:scenarios).
 
 Echo parameters and TaylorF2 cycle counts for three fiducial mu-Ares-band
-SMBHB scenarios.  All numbers in the paper's Table II must come from this
-script.
+SMBHB scenarios.  All numbers in the paper's Table III must come from this
+script.  (Filename retained for backwards compatibility; paper numbering
+changed when the tables were reordered.)
 
 Conventions
 -----------
@@ -62,7 +63,7 @@ def main():
     sep = "-" * len(hdr)
 
     print("=" * len(hdr))
-    print("Table II — Echo parameters (chi = 0.98 aligned)")
+    print("Table III — Echo parameters (chi = 0.98 aligned)")
     print("h_0 convention: prefactor 4  [Eq. (2)]")
     print("1.5pN cycle column is tail-only (4 pi); SO reported separately as SO/beta_SO.")
     print("delta-f columns split 1.5pN into tail and SO. delta-f_2pN < 0.03 nHz everywhere; omitted.")
