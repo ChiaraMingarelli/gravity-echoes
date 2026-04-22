@@ -1,0 +1,697 @@
+\documentclass[aps,prx,twocolumn,superscriptaddress,nofootinbib,longbibliography]{revtex4-2}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts,mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newcommand{\Uab}{\Upsilon_{ab}(\theta, \varphi, \zeta)}
+\newcommand{\GW}{\mathrm{GW}}
+\newcommand{\hd}{\Gamma_{ab}}  % Hellings and Downs
+\newcommand{\nhz}{\mathrm{nHz}}
+
+% Journal macros (for ADS BibTeX)
+\providecommand{\apj}{The Astrophysical Journal}
+\providecommand{\apjl}{The Astrophysical Journal Letters}
+\providecommand{\apjs}{The Astrophysical Journal Supplement Series}
+\providecommand{\aap}{Astronomy \& Astrophysics}
+\providecommand{\mnras}{Monthly Notices of the Royal Astronomical Society}
+\providecommand{\prd}{Physical Review D}
+\providecommand{\prl}{Physical Review Letters}
+\providecommand{\cqg}{Classical and Quantum Gravity}
+\providecommand{\araa}{Annual Review of Astronomy and Astrophysics}
+\providecommand{\natast}{Nature Astronomy}
+\providecommand{\raa}{Research in Astronomy and Astrophysics}
+\newcommand{\Msun}{M_\odot}
+\newcommand{\muAres}{$\mu$Ares}
+\newcommand{\phat}{\hat{p}}
+\newcommand{\Ohat}{\hat{\Omega}}
+
+\newcommand{\bbl}[1]{\textcolor{blue}{\textit{bbl: }#1}}
+
+\begin{document}
+
+\title{Gravity Echoes from Supermassive Black Hole Binaries}
+
+\author{Qinyuan Zheng}
+\affiliation{Department of Physics, Yale University, New Haven, 06520, CT, USA}
+
+
+\author{Bence B\'ecsy}
+\affiliation{Institute for Gravitational Wave Astronomy and School of Physics and Astronomy, University of Birmingham, Edgbaston, Birmingham B15 2TT, UK}
+
+\author{Chiara M. F. Mingarelli}
+\affiliation{Department of Physics, Yale University, New Haven, 06520, CT, USA}
+\affiliation{Center for Computational Astrophysics, Flatiron Institute, New York, 10010, NY, USA}
+%\email{chiara.mingarelli@yale.edu}
+\date{\today}
+
+% ======================================================================
+% ======================================================================
+
+\begin{abstract}
+\noindent Pulsar timing arrays record gravitational waves from supermassive black hole binaries at two spacetime points: an Earth term, measured when the wave passes the Earth, and a pulsar term, measured when the wave passed each pulsar at an earlier epoch. We show that a future $\mu$Hz-band detection of a nearby massive binary by a mission such as $\mu$Ares would turn PTA pulsar terms into targeted probes of binary evolution. In analogy with supernova light echoes, each pulsar term acts as a gravity echo: a dated snapshot of the binary at an earlier stage of its inspiral. Together, the $\mu$Hz Earth-term measurement and the nHz pulsar-term echoes provide a temporal baseline that neither detector could access alone. For a fiducial equal-mass binary with total mass $10^9\,M_\odot$ at 80~Mpc, we find a combined pulsar timing array echo signal-to-noise ratio of 33, with up to 24 pulsars individually resolving the signal among pulsars with 50-year baselines. The angular dependence of the single-pulsar echo sensitivity alone enables independent sky localization of the source to $\sim$10--100~deg$^2$, and the resolved pulsar-term frequencies directly measure the binary inspiral rate hundreds to thousands of years ago. With sufficient pulsar distance precision, a small set of anchor pulsars could additionally phase-connect the array and trace the post-Newtonian evolution coherently over kpc baselines. The source population required for gravity echoes is drawn from the same massive-end census responsible for the observed nanohertz stochastic background.
+\end{abstract}
+\maketitle
+% ======================================================================
+\section{Introduction}
+
+%Detecting an individual supermassive black hole binary (SMBHB) across widely separated gravitational-wave (GW) bands would open a qualitatively new window on binary evolution. Pulsar timing arrays (PTAs) are uniquely suited to this problem because each pulsar term samples the same binary at an earlier epoch than the Earth term, with a look-back time set by the source--pulsar--Earth geometry~\cite{Lee2011, CorbinCornish2010, Mingarelli2012}. A future $\mu$Hz detector such as $\mu$Ares~\cite{Sesana2021} would measure the Earth-term waveform directly, providing a template precise enough to turn pulsar terms from noise into targeted probes of the binary at earlier stages of its inspiral. In analogy with light echoes from supernovae~\cite{Sesana2016}, we refer to these delayed pulsar-term signals as \emph{gravity echoes}. Here we develop the formalism for gravity echoes and quantify when they are detectable, what they can measure, and what ultimately limits their precision.
+
+%The recent nanohertz GW background measurements by PTAs~\cite{NANOGrav15yr,EPTA2023,PPTA2023,CPTA2023,MPTA2025} provide indirect evidence that SMBHBs exist in large numbers, and their amplitude suggests that the most massive systems may be more common than previously inferred from electromagnetic scaling relations~\cite{Agazie2023pop}. Importantly, this improves the prospects for a nearby, high-mass binary whose Earth term is observable in the $\mu$Hz band and whose pulsar terms are detectable in PTA data. Such a system would be particularly informative. Black hole spins encode growth history, distinguishing prolonged accretion from repeated mergers~\cite{Barausse2012,Hughes2003,Berti2008}. The inspiral phase evolution is sensitive both to the binary environment, including circumbinary disk torques, and to possible deviations from general relativity at mass scales complementary to LIGO--Virgo--KAGRA~\cite{LIGOScientific2021} and LISA~\cite{LISA2017}. The $\mu$Hz--nHz lever arm is unique because it accesses $10^2$--$10^3$~yr baselines over which the binary accumulates thousands of GW cycles, allowing post-Newtonian phase evolution to be tracked across widely separated epochs.
+
+%A $\mu$Ares detection would unlock this science retroactively. The pulsar-term signals are already present in PTA data, but without an independent Earth-term measurement they must be sought through a blind continuous-wave search over a large parameter space. An Earth-term template fixes the binary masses, spins, sky location, and inclination well enough to convert that problem into a targeted matched-filter search for echoes in individual pulsars~\cite{CorbinCornish2010,Arzoumanian2020targeted,NG15targeted}. Dedicated archival PTA searches could in principle recover echoes independently, but without a $\mu$Hz template the detected signal cannot be unambiguously identified as a pulsar term from a known source. Concurrent independent work by Criswell et al.\ (in prep) explores the complementary post-merger regime, in which the binary has already coalesced.
+
+%The main obstacle is precision with which the retarded pulsar epochs can be determined. Fully exploiting gravity echoes requires pulsar distances accurate enough to preserve phase coherence with the source model over the Earth--pulsar baseline. Only a handful of pulsars currently approach this regime: PSR~J0437$-$4715 has a distance uncertainty of $\delta L_p = 0.11$~pc~\cite{Reardon2024}, and very long baseline interferometry programs such as PSR$\pi$~\cite{Deller2019} and MSPSR$\pi$~\cite{Ding2023} achieve microarcsecond parallaxes for dozens of millisecond pulsars. For most PTA pulsars, however, the look-back time remains too uncertain for coherent phase tracking, and the pulsar terms act as noise. Pulsar distance precision is therefore the central bottleneck of the echo program.
+
+%Echoes are detectable only in a restricted part of parameter space. Typical LISA-band SMBHBs are too light to produce measurable pulsar-term timing residuals, which remain at femtosecond levels even for nearby systems. By contrast, binaries in the high-mass tail of the $\mu$Ares catalog, $M_{\rm tot} \gtrsim 10^{8.5}\,\Msun$ within a few hundred Mpc (see Figure~\ref{fig:horizon} and Table~\ref{tab:horizon}), can produce nanosecond-level pulsar terms while remaining observable in the $\mu$Hz band. The $\mu$Hz--nHz combination is therefore the only band pairing in which the Earth term and the delayed pulsar terms of the same SMBHB are both measurable.
+
+%This science program naturally divides into three tiers of increasing ambition. Tier~1 is a network detection of the echo signal across the PTA. Tier~2 resolves individual echoes in single pulsars, enabling direct tests of the inspiral rate at distinct look-back times. Tier~3 phase-connects multiple anchor pulsars across the array (defined in Sec.~\ref{sec:detectability}), permitting precision tracking of the waveform over the full Earth--pulsar baseline. This third tier is the most demanding, requiring both exceptionally accurate pulsar distances and a waveform model that includes spin-orbit and spin-spin couplings, which contribute hundreds of GW cycles over kpc baselines~\cite{Mingarelli2012}. These tiers, their thresholds, and their horizons are developed quantitatively below.
+
+%The rest of the paper is laid out as follows. Sec.~\ref{sec:signal} defines the echo signal model and its angular dependence. Sec.~\ref{sec:detectability} maps the detectable parameter space, establishes the astrophysical plausibility of suitable sources, and defines three detection tiers. Sec.~\ref{sec:phase} addresses the central technical challenge of maintaining phase coherence across the echo baseline. Sec.~\ref{sec:skyloc} shows how the angular dependence of the echo signal-to-noise ratio (SNR) enables sky localization. Sec.~\ref{sec:science} synthesizes the science return through a worked example of a detected nearby binary, including consistency tests of the inspiral dynamics and sensitivity to environmental effects. Sec.~\ref{sec:discussion} discusses open problems and limitations, and identifies the concrete observational and analysis steps needed to realize this multiband GW science.
+
+
+Detecting an individual supermassive black hole binary (SMBHB) across widely separated gravitational-wave (GW) bands would enable direct observation of binary evolution across decades of GW frequency. Pulsar timing arrays (PTAs) are uniquely suited to this problem since each pulsar term samples the same binary at an earlier epoch than the Earth term, with a look-back time set by the source--pulsar--Earth geometry~\cite{Lee2011,CorbinCornish2010,Mingarelli2012}. A future $\mu$Hz detector such as $\mu$Ares~\cite{Sesana2021} would measure the Earth-term waveform directly, turning pulsar terms into targeted probes of the binary at earlier stages of its inspiral. In analogy with light echoes from supernovae~\cite{Couderc1939, Zwicky1940}, we refer to these delayed pulsar-terms as \emph{gravity echoes}. In this work, we show that gravity echoes define a distinct multiband observable: together, the $\mu$Hz Earth term and the delayed PTA pulsar terms provide access to the inspiral history of a single SMBHB over baselines of hundreds to thousands of years.
+
+The recent nanohertz GW background measurements by PTAs~\cite{NANOGrav15yr,EPTA2023,PPTA2023,CPTA2023,MPTA2025} provide indirect evidence that SMBHBs exist in large numbers, and their amplitude suggests that the most massive systems may be more common than previously inferred from electromagnetic scaling relations~\cite{Agazie2023pop}. This improves the prospects for a nearby, high-mass binary whose Earth term is observable in the $\mu$Hz band and whose pulsar terms are detectable in PTA data. Such a system would constrain several aspects of fundamental physics that are inaccessible to any single detector. Black hole spins encode growth history, distinguishing prolonged accretion from repeated mergers~\cite{Barausse2012,Hughes2003,Berti2008}. The inspiral phase evolution is sensitive both to the binary environment, including circumbinary disk torques, and to possible deviations from general relativity at mass scales complementary to LIGO--Virgo--KAGRA~\cite{LIGOScientific2021} and LISA~\cite{LISA2017}. The $\mu$Hz--nHz lever arm is unique because it accesses widely separated retarded epochs over which the binary accumulates thousands of GW cycles, allowing post-Newtonian phase evolution to be tested across a baseline unavailable to either detector alone.
+
+A $\mu$Ares detection would make this science accessible retroactively. The pulsar-term signals are already present in PTA data, but without an independent Earth-term measurement they must be sought through a blind continuous-wave search over a large parameter space. An Earth-term template fixes the binary masses, spins, sky location, and inclination well enough to convert that problem into a targeted matched-filter search for echoes in individual pulsars~\cite{Arzoumanian2020targeted,NG15targeted}. Dedicated archival PTA searches can recover echoes independently if a continuous-wave PTA detection supplies the Earth-term template at nHz, though with weaker phase discrimination because the pulsar terms then sit at sub-nHz frequencies where red noise and the stochastic background dominate. The $\mu$Ares program is the cleanest route because the $\mu$Hz--nHz band separation isolates the echoes from PTA confusion noise. Concurrent independent work by Criswell et al.\ (in prep) explores the complementary post-merger regime, in which the binary has already coalesced.
+
+The main obstacle is the precision with which the retarded pulsar epochs can be determined. Fully exploiting gravity echoes requires pulsar distances accurate enough to preserve phase coherence with the source model over the Earth--pulsar baseline. Only a handful of pulsars currently approach this regime: PSR~J0437$-$4715 has a distance uncertainty of $\delta L_p = 0.11$~pc~\cite{Reardon2024}, and very long baseline interferometry programs such as PSR$\pi$~\cite{Deller2019} and MSPSR$\pi$~\cite{Ding2023} achieve microarcsecond parallaxes for dozens of millisecond pulsars. For most PTA pulsars, however, the look-back time remains too uncertain for coherent phase tracking, and the pulsar terms act as noise. Pulsar distance precision is therefore the central bottleneck of the echo program.
+
+Echoes are detectable only in a restricted part of parameter space. Typical LISA-band SMBHBs are not massive enough to produce measurable pulsar-term timing residuals, which remain at femtosecond levels even for nearby systems. By contrast, binaries in the high-mass tail of the $\mu$Ares catalog, $M_{\rm tot} \gtrsim 10^{8.5}\,\Msun$ within a few hundred Mpc, can produce nanosecond-level pulsar terms while remaining observable in the $\mu$Hz band. The $\mu$Hz--nHz combination is therefore the only band pairing in which the Earth term and the delayed pulsar terms of the same SMBHB are both measurable. This science program divides into three tiers. Tier~1 is a network detection of the echo signal across the PTA. Tier~2 resolves individual echoes in single pulsars, enabling direct tests of the inspiral rate at distinct look-back times. Tier~3 phase-connects multiple anchor pulsars across the array, permitting precision tracking of the waveform over the full Earth--pulsar baseline. This final tier is the most demanding, requiring both exceptionally accurate pulsar distances and a waveform model that includes spin-orbit and spin-spin couplings, which contribute hundreds of GW cycles over kpc baselines~\cite{Mingarelli2012}.
+
+The paper is organized as follows. Section~\ref{sec:signal} defines the echo signal model and its angular dependence. Section~\ref{sec:detectability} maps the detectable parameter space, establishes the astrophysical plausibility of suitable sources, and defines the three detection tiers. Section~\ref{sec:phase} addresses the central technical challenge of maintaining phase coherence across the echo baseline. Section~\ref{sec:skyloc} shows how the angular dependence of the echo signal-to-noise ratio enables sky localization. Section~\ref{sec:science} synthesizes the science return through a worked example of a detected nearby binary, and Sec.~\ref{sec:discussion} discusses limitations and next steps.
+
+% ======================================================================
+% ======================================================================
+
+\section{Signal model for gravity echoes}\label{sec:signal}
+
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{muAres-PTA.pdf}
+  \caption{Multiband GW sensitivity landscape from nHz to mHz. Solid curves show detector sensitivity for NANOGrav 15yr~\cite{NG15-CWs}, an IPTA projection to 2050, $\mu$Ares, and LISA. Dashed curves show astrophysical GWB ceilings for SMBHBs~\cite{Mingarelli_ceiling}, AGN-IMRIs~\cite{Mingarelli_AGN_IMRI}, and EMRIs~\cite{BonettiSesana2020}. Three illustrative echo sources are shown: optimistic ($M = 10^9\,M_\odot$, $D_L = 100$~Mpc), typical ($M = 6\times10^8\,M_\odot$, $D_L = 200$~Mpc), and conservative ($M = 10^8\,M_\odot$, $D_L = 2$~Gpc), all with $q = 1$ and $f_E = 1\,\mu$Hz. For each source, the faint dashed line traces the inspiral characteristic strain $h_{c,\rm insp}$, Eq.~\eqref{eq:hc_inspiral}, while the star marks the present-day Earth-term frequency $f_E$ in the $\mu$Ares band. The smaller markers show the observed pulsar-term strain $h_{c,\rm PTA}$, Eq.~\eqref{eq:hc_pta} at retarded frequencies $f_P < f_E$ for 20 simulated pulsars. These lie below the inspiral track because each pulsar term is only observed for tens of years, which is much shorter than the binary's residence time of tens of millions of years in the PTA band.}
+  \label{fig:landscape}
+\end{figure*}
+
+The observable signature of a gravity echo is a quasi-monochromatic timing residual imprinted on each pulsar by the binary at its retarded pulsar-term frequency ${f_{P,i} < f_E}$, where $f_E$ is the Earth-term frequency. We define the time delay between the Earth term and the pulsar term as
+\begin{equation}\label{eq:tau}
+  \tau_i = \frac{L_{p,i}(1 + \Ohat \cdot \phat_i)}{c}\, ,
+\end{equation}
+where $L_{p,i}$ is the distance to pulsar $i$, $\phat_i$ is the unit vector from the Earth to that pulsar, and $\Ohat$ is the GW propagation direction. For PTA pulsars at kpc distances, $\tau_i$ typically spans $10^2$--$10^3$~yr. Since the binary evolves negligibly over the PTA observation time $T_{\rm PTA}$, each pulsar term is well approximated as a single-frequency sinusoid whose amplitude and frequency are set by the source parameters and the retarded epoch. Throughout this section, we model the source as a circular, non-precessing inspiral at leading post-Newtonian order, deferring spin corrections to Sec.~\ref{sec:phase} and residual eccentricity to Sec.~\ref{sec:environment}.
+
+The intrinsic strain amplitude of a circular binary at pulsar-term frequency $f_{P,i}$ is
+\begin{equation}\label{eq:strain_amp}
+ h_0(f_P) = \frac{4(G\mathcal{M}_c)^{5/3}(\pi f_P)^{2/3}}{c^4 D_L}\,,
+\end{equation}
+where $\mathcal{M}_c = \eta^{3/5}M_{\rm tot}$ is the chirp mass, $\eta = m_1 m_2/M_{\rm tot}^2$ is the symmetric mass ratio, $M_{\rm tot} = m_1 + m_2$ is the total mass, and $D_L$ is the luminosity distance to the source. After projection through the pulsar antenna response, the timing residual amplitude in pulsar $i$ is
+\begin{equation}\label{eq:residual}
+ r_{P,i} = \frac{h_0(f_{P,i})}{2\pi f_{P,i}} \sqrt{ \left(F_+^{(i)} \frac{1+\cos^2\iota}{2}\right)^{\!\!2} + \left(F_\times^{(i)} \cos\iota\right)^{\!\!2} }\,,
+\end{equation}
+where $\iota$ is the binary inclination, $\psi$ is the polarization angle, and $F_{+,\times}^{(i)}$ are the PTA antenna-pattern functions~\cite{Mingarelli2012}. In a blind continuous-wave search, the source orientation $(\iota,\psi,\Ohat)$ is unknown. Here, the $\mu$Ares detection fixes those quantities, so the projection becomes known.
+
+For $N_{\rm obs}=T_{\rm PTA}/\Delta t$ times of arrival at cadence $\Delta t$, and assuming white timing noise with variance $\sigma_{\rm TOA}^2$, the optimal matched-filter signal-to-noise ratio in pulsar $i$ is~\cite{JK2012,MooreCB2015,HazbounRS2019}
+\begin{equation}\label{eq:snr}
+  \rho_i = \frac{r_{P,i}\sqrt{N_{\rm obs}/2}}{\sigma_{\rm TOA}}\,,
+\end{equation}
+where the factor of $2$ comes from time averaging of the sinusoid. The network SNR then adds in quadrature,
+\begin{equation}\label{eq:snr_comb}
+  \rho_{\rm comb}^2 = \sum_{i=1}^{N_{\rm psr}} \rho_i^2\,,
+\end{equation}
+where $N_{\rm psr}$ is the number of pulsars in the array. In practice, the network is dominated by a small number of favorably oriented pulsars since both the antenna response and the retarded frequency depend strongly on $(1+\Ohat\cdot\phat_i)$, as we discuss more in Sec.~\ref{sec:snr_angle}.
+
+To place the echo signal in the broader multiband context, we use two forms of the characteristic strain. The inspiral track over the binary's full lifetime is~\cite{MooreCB2015}
+\begin{equation}\label{eq:hc_inspiral}
+  h_{c,\rm insp} = h_0\sqrt{\frac{f^2}{\dot{f}}}\,,
+\end{equation}
+which represents the signal power deposited per logarithmic frequency bin. The observed pulsar-term characteristic strain, appropriate for a monochromatic source accumulated over the PTA observing time $T_{\rm PTA}$, is~\cite{MooreCB2015}
+\begin{equation}\label{eq:hc_pta}
+  h_{c,\rm PTA} = h_0\sqrt{f_P\,T_{\rm PTA}}\,.
+\end{equation}
+The observed $h_{c,\rm PTA}$ lies well below the inspiral track because each pulsar term is measured for only $T_{\rm PTA} \sim 20$--$50$~yr, far shorter than the $\sim 100$~Myr the binary spends at nHz frequencies. Figure~\ref{fig:landscape} shows this multiband landscape from nHz to mHz, including the Earth-term frequency in the $\mu$Ares band and the delayed pulsar terms at lower frequencies in the PTA band.
+
+The PTA sensitivity curves used throughout this work include per-pulsar intrinsic red noise drawn from the NANOGrav 15-year custom-noise analysis~\cite{NG15noise}, injected into the pulsar covariance matrix via \texttt{hasasia}'s \texttt{sim\_pta} routine~\cite{Hazboun2019hasasia} (see Appendix~\ref{app:rednoise} for details). We do not include a stochastic gravitational-wave background as a correlated noise source. This is a reasonable approximation for several reasons: the echo signals lie at the high-frequency end of the PTA band, where the background is subdominant, and current data show no significant evidence for discreteness in the nanohertz background~\cite{NG15discreteness}, suggesting that any confusion noise from individually loud sources is small in this frequency range. The SNR estimates in the main text use the white-noise matched-filter expression Eq.~\eqref{eq:snr}, which is adequate for order-of-magnitude forecasts at pulsar-term frequencies above $\sim20$~nHz, where per-pulsar intrinsic red noise has fallen below the white-noise floor for most NANOGrav millisecond pulsars~\cite{NG15noise} and the stochastic background itself steepens from its $f^{-2/3}$ scaling due to source discreteness~\cite{Sesana2008}, with the NG15 data placing the measured knee at $26^{+28}_{-19}$~nHz~\cite{NG15discreteness}. A full search will require per-pulsar noise modeling, but the qualitative conclusions are unchanged. The sensitivity curves and echo source tracks are computed with the interactive visualization tool described in the Software section.
+
+
+
+\subsection{Angular dependence of single-pulsar detectability}\label{sec:snr_angle}
+
+Not all pulsars contribute equally to an echo search. The single-pulsar SNR depends strongly on the angular separation $\theta$ between the source and the pulsar, because $\theta$ controls both the geometric delay and the antenna response. This angular dependence determines which pulsars dominate the detection and motivates the sky-localization strategy of Sec.~\ref{sec:skyloc}.
+
+Working in the computational frame~\cite{Mingarelli2013}, $\Ohat$ is the GW propagation direction (opposite the source direction), so $\Ohat\cdot\phat = -\cos\theta$, where $\theta$ is the angle between the GW source and the pulsar as seen from the Earth. The factor $1 + \Ohat\cdot\phat$ in Eq.~\eqref{eq:tau} then becomes $1 - \cos\theta$.
+
+The leading-order pulsar-term frequency is
+\begin{equation}\label{eq:fP_exact}
+ f_P = f_E\!\left(1 + \frac{8\dot{f}\,\tau}{3f_E}\right)^{\!-3/8},
+\end{equation}
+where $\dot{f}$ is the frequency derivative at $f_E$, expanded to full post-Newtonian order in Eq.~\eqref{eq:fdot}. Larger $\theta$ increases $\tau$ and decreases $f_P$, which increases the timing residual amplitude as $r_P \propto f_P^{-1/3}$. The antenna beam pattern acts in the opposite direction: the functions $F_{+,\times}^{(i)}$ carry a factor $1/(1 - \cos\theta)$ in the denominator~\cite{Mingarelli2012}, but the geometric projection in the numerator vanishes as $\sin^2\theta$ when $\theta \to 0$, so sky averaging at fixed $\theta$ gives $\langle F^2 \rangle \propto \cos^4(\theta/2)$.
+
+Combining Eqs.~\eqref{eq:fP_exact} and~\eqref{eq:residual} with this antenna-pattern scaling, and writing $\Lambda \equiv 4\dot{f}\,L_p/(3 f_E\,c)$ for the dimensionless chirp accumulated over the light-travel time, the sky-averaged $\rho^2$ takes the form, up to prefactors independent of $\theta$,
+\begin{equation}\label{eq:snr_theta}
+  \rho^2(\theta) \propto
+  \bigl[1 + 4\Lambda\,\sin^2(\theta/2)\bigr]^{1/4}
+  \cos^4(\theta/2)\,.
+\end{equation}
+This produces a maximum at an optimal angle $\theta_{\rm opt}$. Setting $\mathrm{d}\rho^2/\mathrm{d}\theta = 0$ gives
+\begin{equation}\label{eq:theta_opt}
+  \sin^2\!\bigl(\theta_{\rm opt}/2\bigr)
+ = \frac{\Lambda - 2}{9\Lambda}\,.
+\end{equation}
+
+For the sources considered here, $\Lambda$ is large. Taking an equal-mass binary with total mass $M_{\rm tot} = 10^9\;\Msun$ at Earth-term frequency $f_E = 1\;\mu$Hz and a pulsar at $L_p = 1$~kpc gives $\Lambda \approx 2000$, and even the typical source ($M_{\rm tot} = 6\times10^8\;\Msun$, same $f_E$ and $L_p$) gives $\Lambda \approx 850$. In this regime Eq.~\eqref{eq:theta_opt} reduces to $\sin^2(\theta_{\rm opt}/2) = 1/9$, giving $\theta_{\rm opt} = 2\arcsin(1/3) \approx 39^\circ$, consistent with the peak in Fig.~\ref{fig:snr_vs_theta} calculated numerically with the \texttt{gwent}~\cite{Kaiser2021} and \texttt{hasasia}~\cite{HazbounRS2019,Hazboun2019hasasia} software packages. A peak exists only when $\Lambda > 2$. For sources with minimal frequency evolution, $\Lambda < 2$, the antenna pattern dominates and $\rho$ decreases monotonically with $\theta$.
+
+Counterintuitively, the most informative pulsars are not those closest to or farthest from the source on the sky, but those at intermediate separations. Each pulsar with $\rho(\theta)$ above threshold constrains the source to lie within an annular ring on the sky centered on that pulsar, while nondetections exclude such rings. This geometry provides the basis for the localization strategy developed in Sec.~\ref{sec:skyloc}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{psr_term_SNR_vs_theta_optimistic_100426.png}
+  \caption{Single-pulsar echo SNR versus source--pulsar angle $\theta$ for the optimistic binary ($M_{\rm tot}=10^9\;\Msun$, $D_L=100$~Mpc, $L_p \approx 3$~kpc) and a high-precision pulsar with $\sigma_{\rm TOA}=30$ ns. The purple curve shows the enhancement from the frequency shift alone: larger geometric delay lowers $f_P$ and increases the echo amplitude as $r_P \propto f_P^{-1/3}$. The green curve includes the antenna beam pattern, which suppresses the response at large $\theta$ and produces a maximum at $\theta_{\rm opt}\simeq39^\circ$ Eq.~\eqref{eq:theta_opt}. The blue band marks the angular range with $\rho>5$. The adopted $\sigma_{\rm TOA}=30$~ns represents a best-precision target achievable for the most precisely-timed millisecond pulsars, higher than the $\sim100$~ns median assumed for the SKA~Phase~1 and IPTA~2050 arrays in Table~\ref{tab:facilities}.}
+  \label{fig:snr_vs_theta}
+\end{figure}
+
+
+\section{Detectability}\label{sec:detectability}
+
+Gravity echoes are present in PTA data whether or not the Earth term is ever independently detected. What determines their usefulness is whether an external waveform template and the PTA together make them recoverable. In this section we map the relevant observational regime: the PTA configurations we assume, the pulsar distance precision required for phase coherence, the source masses for which echoes are measurable, and the three detection tiers that define the resulting science program.
+
+The PTA configurations we consider are summarized in Table \ref{tab:facilities}. As a present-day reference we adopt the $\sim131$ canonical IPTA pulsars currently timed across the major regional PTAs~\cite{Mingarelli2026review}, with an effective ensemble timespan of $\sim27$~yr set by the longest-timed EPTA members~\cite{Desvignes2016} and a median timing precision $\sigma_{\rm TOA}\sim200$~ns at biweekly cadence. By the $\mu$Ares epoch, SKA Phase~1 is expected to time $\sim200$ millisecond pulsars to $\sim100$~ns precision over 20-year baselines~\cite{SKAPTA2025,Keane2025}, while DSA-2000~\cite{DSA2000} should add a further $\sim200$ northern-hemisphere MSPs with comparable precision but monthly cadence. By 2050, the same canonical IPTA pulsars will have accumulated $\sim50$~yr baselines with timing residuals improved to $\sim100$~ns through upgraded backends and the addition of SKA and DSA-2000 data. These long-baseline pulsars are particularly important because the single-pulsar echo SNR scales as $\rho_i \propto \sqrt{N_{\rm obs}}\,/\,\sigma_{\rm TOA}$ Eq.~\eqref{eq:snr}, so baseline length, cadence, and timing precision all contribute directly.
+
+\begin{table}[t]
+\caption{Facility configurations adopted in this work. The IPTA~2050 line assumes that upgraded backends, SKA data, and DSA-2000 data improve the median timing precision of the canonical pulsars from $\sim200$~ns to $\sim100$~ns over 50-year baselines. For the NANOGrav 15-yr data, we use the published values from~\cite{NG15-timing}. }\label{tab:facilities}
+\centering
+\begin{tabular}{lcccc}
+\hline\hline
+Facility & $N_{\rm psr}$ & $T$ [yr] & $\sigma_{\rm TOA}$ & Cadence \\
+\hline
+Canonical IPTA & 131 & 27 & 200~ns & biweekly \\
+SKA1 & 200 & 20 & 100~ns & biweekly \\
+DSA-2000 & 200 & 20 & 100~ns & monthly \\
+Canonical IPTA (2050) & 131 & 50 & 100~ns & biweekly \\
+\hline\hline
+\end{tabular}
+\end{table}
+
+An independent Earth-term measurement from a $\mu$Hz detector turns the PTA continuous-wave search for an individual SMBHB from a blind search into a targeted one. Throughout this work we adopt the proposed $\mu$Ares mission as the fiducial Earth-term observatory, using the sensitivity model of Ref.~\cite{Sesana2021}. For the fiducial sources considered below, the Earth-term matched-filter signal-to-noise ratio ranges from $\rho_E\sim2\times10^5$ to $\sim10^7$, so the source masses, spins, sky location, and inclination are effectively known before the PTA echo search begins. Even if low-frequency acceleration noise rises more steeply than the baseline design assumes, as occurs below the red-noise knee in LISA~\cite{LISA2017}, the Earth-term measurement remains easily precise enough to support phase-coherent echo tracking.
+
+The limiting PTA requirement is pulsar distance precision. To preserve phase coherence, the uncertainty in the pulsar distance must satisfy $\delta L_p < c/(2\pi f)$, which yields $\approx0.15$~pc at $f=10$~nHz and tightens to $\approx0.03$~pc at 50~nHz, where many of the echo signals in Table~\ref{tab:scenarios} lie. Since parallax uncertainties scale as $\delta L_p \simeq \sigma_\varpi L_p^2$, the corresponding requirement is
+\begin{equation}\label{eq:parallax_req}
+\sigma_{\varpi,\rm req} < 1.7\;\mu\text{as}\left(\frac{10\;\text{nHz}}{f}\right)\left(\frac{300\;\text{pc}}{d}\right)^{\!2},
+\end{equation}
+which confines phase-coherent pulsars to the immediate Solar neighborhood. We define an \emph{anchor pulsar} as one satisfying $\delta L_p < c/(2\pi f)$, so that its echo phase is known to better than one radian and there is no integer-cycle ambiguity. PSR~J0437$-$4715 currently satisfies this threshold, while the next-nearest PTA pulsars remain one to two orders of magnitude away in parallax precision. SKA-era timing and VLBI may plausibly expand the anchor population to $\mathcal{O}(3$--$5)$ at 10~nHz, which is small but not negligible (see Appendix~\ref{app:anchors}). Pulsars with good but sub-threshold distance priors remain useful for detection even when they cannot individually support phase coherence.
+
+
+
+The detectable source population occupies a narrow mass window. LISA-band SMBHBs are too light to produce measurable PTA pulsar terms: even a nearby $10^6\;\Msun$ binary yields only femtosecond-level timing residuals. By contrast, $\mu$Ares-band binaries with $M_{\rm tot}\sim10^{8.5}$--$10^{9.5}\;\Msun$ can produce nanosecond-level pulsar terms while remaining observable in the $\mu$Hz band. This is the most favorable mass range for echoes. Table~\ref{tab:scenarios} summarizes three fiducial cases spanning this regime. The optimistic source ($10^9\;\Msun$ at 100~Mpc) lies comfortably within PTA reach, the typical source lies near the detection boundary, and the conservative source is effectively inaccessible. The optimistic distance is deliberately round but realistic: it falls inside the MASSIVE survey volume~\cite{Ma2014}, and population models predict $\sim2$ near-equal-mass PTA-band binaries at this mass within 108~Mpc (Fig.~\ref{fig:Nsmbhb}; Appendix~\ref{app:population_estimate}).
+
+
+ \begin{figure}[t]
+   \centering
+   \includegraphics[width=\columnwidth]{N_PTA_vs_distance.pdf}
+   \caption{Expected number of SMBHBs with $M_{\rm tot}=10^9\,M_\odot$ and $q>0.9$ as a function of distance. The median (solid), 68\% credible region (dark shading), and 90\% credible region (light shading) are computed from Monte Carlo propagation of uncertainties in the Liepold \& Ma black hole mass function parameters~\cite{LiepoldMa2024} and the Casey-Clyde et al.\ galaxy pairing rate~\cite{CaseyClyde2025}. The dashed line marks $N=1$. The median crosses unity at $D\approx83$~Mpc, comparable to the Tier-3 echo horizon of $\sim80$~Mpc. The red point marks $D=108$~Mpc, with $N\sim2$ expected within the local $(4\pi/3)\,D^3$ sphere.}
+   \label{fig:Nsmbhb}
+ \end{figure}
+
+\begin{table*}[t]
+\caption{Echo parameters for three SMBHB scenarios with $q=1$, $\chi=0.98$ spins aligned, $\beta_{\rm SO}=7.68$, and $\tau=L_p/c$ ($\theta=90^\circ$). The 1.5pN tail and spin-orbit pieces are given separately since they contain different physics, see Eqs.~\eqref{eq:phase} and~\eqref{eq:fdot}. The 2pN frequency shift is below $0.03$~nHz throughout and is therefore not reported. Frequency shifts are considered significant if they move the signal by one frequency bin, defined by $\delta f_{\rm bin}=1/T_{\rm obs}$. This is $1.6$~nHz at 20~yr and $0.6$~nHz at 50~yr.}
+\label{tab:scenarios}
+\centering
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{lccccccccccccccc}
+\hline\hline
+ & \multicolumn{2}{c}{Earth term} &
+   \multicolumn{4}{c}{Pulsar term} &
+   \multicolumn{6}{c}{Gravitational-wave cycles} &
+   \multicolumn{3}{c}{$\delta f$ [nHz]} \\
+\cline{2-3}\cline{4-7}\cline{8-13}\cline{14-16}
+Scenario & $M_{\rm tot}$ & $f_E$ & Pulsar & $\tau$  & $f_P$ & $r_P$ & Newtonian & 1pN & 1.5pN & 1.5pN & 2pN & Total & 1pN & 1.5pN & 1.5pN \\
+ & $\Msun$& $\mu$Hz & & yr & nHz & ns & & & tail & SO/$\beta$ & & & & tail & SO \\
+\hline
+Conservative & $10^8$ & 10 & 1~kpc & 3{,}262 & 189 & <0.01 & 30{,}989 & $+$322 & $-$158 & $+$12.6 & $+$4 & 31{,}253 & $+$1.2 & $-$0.4 & $+$0.3 \\
+$D_L\!=\!2$~Gpc & & & J0437 & 512 & 381 & <0.01 & 9{,}713 & $+$157 & $-$95 & $+$7.5 & $+$3 & 9{,}836 & $+$3.8 & $-$1.7 & $+$1.0 \\[3pt]
+Typical & $6\!\times\!10^8$ & 1 & 1~kpc & 3{,}262 & 62 & 2.6 & 10{,}030 & $+$157 & $-$91 & $+$7.3 & $+$2 & 10{,}153 & $+$0.6 & $-$0.3 & $+$0.2 \\
+$D_L\!=\!200$~Mpc & & & J0437 & 512 & 125 & 2.0 & 3{,}090 & $+$73 & $-$51 & $+$4.1 & $+$2 & 3{,}144 & $+$1.9 & $-$1.0 & $+$0.6 \\[3pt]
+Optimistic & $10^9$ & 1 & 1~kpc & 3{,}262 & 45 & 13.3 & 7{,}318 & $+$132 & $-$83 & $+$6.6 & $+$2 & 7{,}420 & $+$0.5 & $-$0.2 & $+$0.1 \\
+$D_L\!=\!100$~Mpc & & & J0437 & 512 & 91 & 10.5 & 2{,}273 & $+$62 & $-$48 & $+$3.8 & $+$2 & 2{,}318 & $+$1.6 & $-$0.9 & $+$0.6 \\
+\hline\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Detection horizons}\label{sec:horizon}
+
+Given a source in the echo sweet spot, the PTA response depends on both the array configuration and the source inclination. We compute the combined network SNR $\rho_{\rm comb}$ by summing Eq.~\eqref{eq:snr} in quadrature over all pulsars in each array configuration listed in Table~\ref{tab:facilities}, evaluating the full antenna pattern at the sky position of each pulsar. We find that the optimistic source is readily detectable: for a face-on $10^9\;\Msun$ binary at 100~Mpc, the SKA-era array yields $\rho_{\rm comb}\approx17$, the IPTA~2050 pulsars yield $\rho_{\rm comb}\approx20$, and the combined array reaches $\rho_{\rm comb}\approx27$. The horizons listed in Table~\ref{tab:horizon} are face-on upper bounds.
+
+\begin{table}[t]
+\caption{Echo detectability for a face-on, $10^9\;\Msun$ equal-mass binary at $f_E = 1\;\mu$Hz, assuming white-noise $\sigma_{\rm TOA} = 100$~ns and biweekly cadence. Horizon distances give the maximum $D_L$ at which each tier threshold is met.}
+\label{tab:horizon}
+\centering
+\begin{tabular}{lccccc}
+\hline\hline
+ & \multicolumn{2}{c}{At 100~Mpc} & \multicolumn{3}{c}{Horizon [Mpc]} \\
+\cline{2-3}\cline{4-6}
+Array & $\rho_{\rm comb}$ & $N_{\rm det}$ & Tier~1 & Tier~2 & Tier~3 \\
+\hline
+SKA (200 psr, 20~yr)        & 16.8 &  0 & 336 &  60 &  51 \\
+IPTA 2050 (131 psr, 50~yr)  & 20.4 &  2 & 408 &  93 &  80 \\
+Combined (331 psr)          & 26.5 &  2 & 529 &  93 &  80 \\
+\hline\hline
+\end{tabular}
+\end{table}
+
+The echo science program divides into three tiers of increasing ambition, each with a distinct horizon in the $(M_{\rm tot},D_L)$ plane. Figure~\ref{fig:horizon} maps the detectability across this parameter space: contours show $\rho_{\rm comb}=5$, 10, and 20 for the SKA-era array, with the shaded region marking the Tier~1 detection zone. The typical source falls near the detection boundary, while the optimistic source sits between the $\rho_{\rm comb}=10$ and $\rho_{\rm comb}=20$ contours ($\rho_{\rm comb}\approx17$ for the SKA array, Table~\ref{tab:horizon}). The dotted line at 108~Mpc marks the MASSIVE survey volume.
+
+\textit{Tier~1: Network detection.}---Coherent stacking across the full array yields a combined SNR $\rho_{\rm comb}>5$ even when no individual pulsar resolves the echo. This establishes that the PTA archive contains a deterministic echo associated with the $\mu$Ares source. For face-on sources the combined-array horizon reaches $\sim530$~Mpc for $10^9\;\Msun$.
+
+\textit{Tier~2: Individual echo recovery.}---At closer distances, five or more individual pulsars resolve the echo with $\rho_i \ge 3$, providing per-pulsar measurements of $f_{P,i}$ and $h_{P,i}$. The threshold of five comes from the post-Newtonian decomposition: separating the Newtonian, 1pN, 1.5pN, and 2pN contributions requires at least four independent delay baselines, plus one to fix the normalization. For a face-on $10^9\;\Msun$ binary this is reached at $D_L \lesssim 93$~Mpc. The long-baseline IPTA pulsars dominate Tier~2 because individual-pulsar sensitivity scales as $\rho_i \propto \sqrt{T_{\rm obs}}$ Eq.~\eqref{eq:snr}. At this tier the measured echo frequencies at different look-back times already trace the inspiral rate, and the pN frequency shifts in Table~\ref{tab:scenarios} show that 1pN and 1.5pN corrections are individually resolvable.
+
+\textit{Tier~3: Phase-coherent reconstruction.}---The final tier requires multiple anchor pulsars with $\rho_i \ge 3$ and distance precision sufficient for phase coherence. The minimum anchor count needed for reliable branch selection has not yet been determined through injection-recovery studies, but the expected population at 10~nHz is $\mathcal{O}(3$--$5)$ (Appendix~\ref{app:anchors}). Once anchor pulsars eliminate the cycle ambiguity, the array traces the waveform coherently over $10^2$--$10^3$~yr baselines, enabling sub-radian tests of post-Newtonian consistency and opening sensitivity to environmental and beyond-GR effects that do not appear in frequency evolution alone. For a face-on $10^9\;\Msun$ binary the Tier~3 horizon is $\sim80$~Mpc.
+
+Table~\ref{tab:horizon} summarizes these results for each array configuration. The combined array achieves the deepest Tier~1 horizon through the $\rho_{\rm comb}\propto\sqrt{N}$ scaling, but Tiers~2 and~3 are set entirely by the IPTA pulsars, whose longer baselines give higher per-pulsar SNR.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_echo_horizon.pdf}
+  \caption{Echo detectability in the $(M_{\rm tot},D_L)$ plane for the SKA-era array parameters in Table~\ref{tab:facilities}, assuming face-on orientation ($\iota = 0$). Contours show the combined PTA echo SNR $\rho_{\rm comb}$ at 5, 10, and 20, computed using the full antenna pattern Eq.~\eqref{eq:residual}. The shaded blue region is detectable ($\rho_{\rm comb} > 5$, Tier~1); Tiers~2 and~3 require progressively closer sources or higher masses. Stars mark the typical and optimistic fiducial scenarios from Table~\ref{tab:scenarios}. The dotted horizontal line marks the MASSIVE survey boundary at 108~Mpc~\cite{Ma2014}. The Liepold \& Ma~\cite{LiepoldMa2024} black hole mass function predicts $\sim500$ SMBHs with $M_{\rm BH}>10^9\;\Msun$ in the MASSIVE survey volume.}
+  \label{fig:horizon}
+\end{figure}
+
+The frequency range $\sim20$--$170$~nHz corresponds to the pulsar-term frequencies spanned by the IPTA~2050 pulsars for a source at $f_E = 1\;\mu$Hz, set by the light-travel delays, $\tau_i$, of the nearest and most distant pulsars in the array. This range is conservative, since at lower frequencies the timing residual grows as $r_P \propto f_P^{-1/3}$, but the noise also worsens because pulsar red noise steepens below $\sim10$~nHz and the stochastic background contributes a correlated foreground. Neither effect is obviously fatal, because the echo remains a deterministic signal at a known sky position, but a quantitative assessment requires per-pulsar noise models and is deferred to future work.
+
+Having identified the mass window $M_{\rm tot}\sim10^{8.5}$--$10^{9.5}\,M_\odot$ and the Tier-3 horizon of $\sim80$~Mpc, we now ask whether the local Universe contains enough such systems for the echo program to be realistic. Integrating the Liepold \& Ma~\cite{LiepoldMa2024} black hole mass function over the MASSIVE survey volume of $2.05\times10^6$~Mpc$^3$ within 108~Mpc~\cite{Ma2014}, we find approximately 500 SMBHs with $M_{\rm BH}>10^9\,M_\odot$ and approximately 1500 with $M_{\rm BH}>5\times10^8\,M_\odot$ --- the component mass of our fiducial equal-mass binary. Propagating the Schechter-fit parameter uncertainties yields 90\% confidence ranges of 240 to 1010 and 820 to 2650 respectively, consistent with the 90\% band of Figure~4 of Liepold \& Ma~\cite{LiepoldMa2024}. Folding in the galaxy pairing rate inferred by Casey-Clyde et al.~\cite{CaseyClyde2025} gives an expected number of PTA-band, near-equal-mass binaries that crosses unity at $D\approx83$~Mpc, comparable to the Tier-3 horizon, with $\sim2$ expected within 108~Mpc, see Fig.~\ref{fig:Nsmbhb} and Appendix~\ref{app:population_estimate}. This same population yields $h_c\approx2.0\times10^{-15}$ through the Phinney formalism~\cite{Phinney2001}, consistent with current PTA measurements. The source population required for gravity echoes is therefore drawn from the same census that produces the observed GWB. Once $\mu$Ares identifies a source anywhere on the sky, the PTA echo search is performed retroactively on the archived timing data, and only one such detection is needed.
+
+% ======================================================================
+
+% ======================================================================
+\section{Post-Newtonian phase evolution}\label{sec:phase}
+
+The central technical challenge of the echo program is maintaining phase fidelity over the full Earth--pulsar baseline. Over hundreds to thousands of years of look-back times, the binary accumulates thousands of GW cycles, so even modest post-Newtonian corrections become observationally important. In this section we show why spin terms must be included, why the primary spin measurement must come from the $\mu$Ares Earth term rather than the pulsar network, and how a small set of anchor pulsars can convert the PTA archive into a phase-coherent long-baseline test of the inspiral.
+
+\subsection{The importance of spins}
+
+Spin-orbit coupling enters the GW phase at 1.5pN order, contributing $\sim10$--$100$ cycles over a kpc baseline for $10^9\;\Msun$ binaries~\cite{Mingarelli2012} (see Fig.~\ref{fig:evolution}), comparable to the 1pN mass contribution. Supermassive black holes are expected to carry significant spin, $\chi \sim 0.1$--$0.9$, from mergers and prolonged accretion~\cite{Reynolds2021}. Thus omitting spin mismodels the phase by $\sim10$--$100$ cycles and the matched filter cannot coherently track the echo.
+
+Two post-Newtonian approximants enter our analysis~\cite{Blanchet2006,BIOPS2009}. TaylorT2 gives the GW phase $\Phi(v)$ and time $t(v)$ as closed-form functions of the pN velocity $v=(\pi M_s f)^{1/3}$ with $M_s = GM_{\rm tot}/c^3$, which maps directly onto the echo observable of pulsar-term frequencies $f_{P,i}$ at known look-back times $\tau_i$, so we use it to compute the total cycles between pulsar and Earth terms. TaylorF2 is the frequency-domain perturbative expansion in which each pN order appears as an additive correction in powers of $v$, which we use to split the total into its per-order contributions in Table~\ref{tab:scenarios} and to write $\dot f$ as an explicit perturbative series in Eq.~\eqref{eq:fdot}.
+
+The TaylorT2 GW phase through 2pN order is
+\begin{equation}\label{eq:phase}
+  \Phi(v) = \Phi_c - \frac{1}{16\eta}\,v^{-5}
+  \!\left[1 + \phi_2\,v^2 + \phi_3\,v^3 + \phi_4\,v^4\right],
+\end{equation}
+where $\Phi_c$ is the coalescence phase, $\eta = m_1 m_2/M_{\rm tot}^2$ is the symmetric mass ratio, $\phi_2 = \frac{3715}{1008} + \frac{55\eta}{12}$ is the 1pN coefficient, $\phi_3 = -10\pi + \frac{5}{2}\beta_{\rm SO}$ includes the spin-orbit parameter $\beta_{\rm SO} = \frac{1}{12}\sum_i \bigl[113 (m_i/M_{\rm tot})^2 + 75\eta\bigr]\chi_i\cos\kappa_i$, and the 2pN coefficient is $\phi_4 = \frac{15293365}{508032} + \frac{27145\eta}{504} + \frac{3085\eta^2}{72} - 10\,\sigma_{\rm SS}$, with the spin-spin parameter $\sigma_{\rm SS} = \frac{\eta}{48}\bigl[-247\,\hat{s}_1\!\cdot\!\hat{s}_2 + 721\,(\hat{L}\!\cdot\!\hat{s}_1)(\hat{L}\!\cdot\!\hat{s}_2)\bigr]\chi_1\chi_2$~\cite{MBMG2005}.
+
+The number of GW cycles between the pulsar and Earth terms decomposes as
+\begin{equation}\label{eq:cycles}
+ N_{\rm total} = N_{\rm Newt} + N_{\rm 1pN} + N_{\rm 1.5pN} + N_{\rm 2pN}\,,
+\end{equation}
+where $N_{\rm total} = \Delta\Phi/(2\pi)$ is computed from Eq.~\eqref{eq:phase}, with $v_P$ obtained from the corresponding TaylorT2 time equation, and the individual pN corrections follow from the TaylorF2 decomposition,
+\begin{equation}\label{eq:Nn_pN}
+N_n = \frac{3}{256\pi\eta}\,\psi_n\,\Delta[v^{2n-5}]\,,
+\end{equation}
+where $\psi_n$ are the standard TaylorF2 coefficients~\cite{Blanchet2006}. The Newtonian term is defined as the residual $N_{\rm Newt}=N_{\rm total}-\sum_n N_n$. Among these orders, the Newtonian contribution and the 1pN coefficient $\phi_2$ in Eq.~\eqref{eq:phase} depend only on the component masses. The 1.5pN coefficient $\phi_3$ is the sum of two physically distinct pieces, the non-spin tail $-10\pi$ and the spin-orbit contribution $(5/2)\beta_{\rm SO}$, which we report as separate columns in Table~\ref{tab:scenarios}~\cite{Mingarelli2012}. The 2pN coefficient $\phi_4$ of Eq.~\eqref{eq:phase} is reported as a single column.
+
+For the fiducial aligned-spin case with $\kappa=0$ adopted throughout this work, Thomas precession vanishes and the full spin contribution appears in the 1.5pN spin-orbit column of Table~\ref{tab:scenarios}. For misaligned spins, orbital-plane precession would contribute additional cycles that could help break parameter degeneracies~\cite{Apostolatos1994,Kidder1995}.
+
+Whether individual pN frequency shifts are detectable depends on the PTA bin width $\delta f_{\rm bin}=1/T_{\rm obs}$, which is $1.6$~nHz for 20~yr and $0.6$~nHz for 50~yr. At J0437 the 1pN shift exceeds the 30-yr bin in all three fiducial scenarios and reaches $+3.8$~nHz in the Conservative case. The 1.5pN tail shift exceeds the 50-yr bin at J0437 in all three scenarios, and the spin-orbit shift reaches the 50-yr bin at J0437 in the Conservative and Typical scenarios. The two pieces have opposite sign, so the net 1.5pN shift is smaller than either piece individually. The 2pN shift is at or below $0.03$~nHz throughout. With a $1$~kpc baseline the individual pN shifts are all sub-bin. While the cycle budget carries comparable 1pN and spin-orbit contributions, $|\Delta f_P|$ itself is mass-dominated, with the 1pN shift exceeding the spin-orbit shift by a factor of $3$--$5$ in every scenario and baseline in Table~\ref{tab:scenarios}. The spin-orbit piece remains the only pulsar-term signature of spin, since the 1pN shift depends only on the component masses. Phase accumulation therefore remains the primary observable, while the resolved 1pN shift and the individually resolved 1.5pN tail and spin-orbit pieces at J0437 provide an independent diagnostic that does not require phase connection.
+
+For completeness, we also give the corresponding frequency evolution, which follows from the same pN expansion but is written in terms of the chirp mass $\mathcal{M}_c$ for direct comparison with $\mu$Ares observables:
+\begin{equation}\label{eq:fdot}
+  \dot{f} = \dot{f}_{\rm N}
+  \!\left[1 + \delta_{\rm 1pN} + \delta_{\rm tail} + \delta_{\rm SO} + \delta_{\rm 2pN} + \cdots\right] \, ,
+\end{equation}
+with the Newtonian rate
+\begin{equation}\label{eq:fdotN}
+ \dot{f}_{\rm N} = \frac{96}{5}\,\pi^{8/3}\!\left(\frac{G\mathcal{M}_c}{c^3}\right)^{\!5/3}\!f^{11/3}\, ,
+ \end{equation}
+ and fractional pN corrections $\delta_{\rm 1pN}=-(743/336+11\eta/4)\,v^2$, $\delta_{\rm tail}=4\pi\,v^3$, $\delta_{\rm SO}=-\beta_{\rm SO}\,v^3$, and $\delta_{\rm 2pN}=(34103/18144+13661\eta/2016+59\eta^2/18)\,v^4$, with $\beta_{\rm SO}$ as in Eq.~\eqref{eq:phase}, reducing to $47\chi/6$ for equal masses and aligned spins. The spin-orbit entry $\delta_{\rm SO}$ is the direct $\dot f$ analogue of the $N_{\rm SO}$ cycle count in Table~\ref{tab:scenarios}, under the same TaylorF2 perturbative decomposition~\cite{Mingarelli2012}. For aligned spins ($\kappa=0$), $\delta_{\rm SO}<0$ decelerates the inspiral. Over a fixed look-back baseline $\tau$, the slower frequency evolution leaves $v_P$ closer to $v_E$ than it would be without spin, so $\Delta f_P = f_P^{\rm spin}-f_P^{\rm nospin}>0$. The total 2pN correction is mass-dominated and same-sign at the few-percent level, and does not alter the sign. The Earth-term $\dot f$ is measured by $\mu$Ares and is not the limiting quantity. What matters for PTA echo science is the pulsar-term frequency. The corresponding shift $\Delta f_P = f_P^{\rm spin} - f_P^{\rm nospin}$ is reported in the Spin-Orbit column of Table~\ref{tab:scenarios}.
+
+The sign and magnitude of $\Delta f_P$ are set by the 1.5pN spin-orbit term. The total 2pN shift is mass-dominated, is a few-percent same-sign correction to the spin-orbit shift, and is below $0.03$~nHz in every scenario, which is why the 2pN frequency shift is omitted from Table~\ref{tab:scenarios}. The cycle budget and the frequency shift therefore tell the same story: the spin information in the pulsar term is carried by spin-orbit, not spin-spin.
+
+Figure~\ref{fig:evolution} illustrates the cumulative phase budget for the optimistic binary over the orthogonal 1~kpc fiducial baseline. The Newtonian term dominates, but the 1pN and 1.5pN pieces are large enough to be resolved once the waveform is phase connected.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_pn_phases.pdf}
+  \caption{Cumulative GW cycles by post-Newtonian order for the Optimistic binary on the orthogonal 1~kpc fiducial baseline. Parameters and the per-order cycle budget are given in Table~\ref{tab:scenarios}. The vertical dashed line marks the pulsar-term frequency.}
+ \label{fig:evolution}
+\end{figure}
+
+% ======================================================================
+\subsection{The spin-distance degeneracy}\label{sec:spin}
+
+Phase-coherent echo analysis requires the waveform template to remain accurate to better than roughly one radian over the full baseline. For the optimistic binary, the spin-orbit contribution over the 1~kpc fiducial baseline is $N_{\rm SO}\approx51$ cycles (Table~\ref{tab:scenarios}), corresponding to a phase contribution of several hundred radians. Demanding $\delta\Phi_{\rm SO}\lesssim1$ rad therefore requires a fractional spin precision of order $\delta\chi/\chi \lesssim 10^{-3}$.
+
+The $\mu$Ares Earth-term measurement at $f_E \sim 1\;\mu$Hz provides this precision. A single-parameter TaylorF2 Fisher integral over the first year of $\mu$Ares observation of the optimistic source gives
+\begin{equation}\label{eq:sigma_chi_earth}
+  \sigma_\chi^{(E)} \;\lesssim\; 10^{-8}\,,
+\end{equation}
+at $D_L = 100$~Mpc, using the sky-averaged $\mu$Ares noise curve and the 1.5pN spin-orbit phase term. This is a one-sided bound: truncating the integration at one year or at merger (whichever is sooner) only reduces the information content, so the true Fisher precision is at least this tight. The associated matched-filter SNR is $\rho_E \gtrsim 6\times10^6$ at 100~Mpc, rising to $\rho_E \gtrsim 8\times10^6$ at the golden-binary distance of 80~Mpc. The spin precision exceeds the $10^{-3}$ coherence requirement by roughly five orders of magnitude. A full multiparameter analysis would degrade this precision, but the available margin is so large that the qualitative conclusion is unchanged. Even if the low-frequency noise floor is an order of magnitude worse than the nominal $\mu$Ares design, the Earth-term spin measurement remains more than sufficient.
+
+By contrast, the pulsar network alone cannot determine the spin, as we show quantitatively in Appendix~\ref{app:spin_degeneracy}. Although each pulsar term accumulates more spin-orbit cycles than the Earth term, its total phase depends on both $\chi$ and the look-back time $\tau_i$. This produces an approximate spin--distance degeneracy: shifts in $\chi$ can be absorbed by compensating shifts in $\tau_i$, so the marginalized Fisher information on $\chi$ vanishes in the absence of external distance information. Distance priors from VLBI partially break this degeneracy, but even the best current pulsars fall short of the $\delta\chi/\chi \lesssim 10^{-3}$ requirement by more than two orders of magnitude (Appendix~\ref{app:spin_degeneracy}). The primary spin information must therefore come from $\mu$Ares, not from the PTA pulsar terms. Improving pulsar distances remains important, but mainly because it reduces cycle ambiguity in the echo phase rather than because it directly constrains $\chi$.
+
+% ======================================================================
+\subsection{Phase connection via anchor pulsars}\label{sec:phase_connection}
+
+Once $\chi$ is fixed by the Earth term, the echo phase at each pulsar becomes a probe of its retarded epoch, and hence of the pulsar distance. The role of anchor pulsars is therefore not to measure spin, but to provide absolute phase reference points at known look-back times. Comparing the backward-propagated $\mu$Ares template against the actual echo phases at these fixed temporal anchors tests whether the inspiral proceeded as predicted over the intervening very long temporal baseline. Any systematic phase drift, discontinuity, or trend with $\tau_i$ would signal unmodeled physics in the binary's evolution.
+
+Current VLBI campaigns such as PSR$\pi$~\cite{Deller2019} and MSPSR$\pi$~\cite{Ding2023} provide $\sim20$ millisecond pulsars with $\lesssim1\%$ distance precision out to $\sim3$~kpc, and this sample should grow with SKA-VLBI baselines. These pulsars are informative, but they are not anchors as we currently define them. Their distance uncertainties imply cycle ambiguities of roughly
+\begin{equation}\label{eq:cycle_ambig}
+\Delta N \approx f_P\,\sigma_\tau \, ,
+\qquad
+\sigma_\tau = (\delta L_p/L_p)\,\tau \, ,
+\end{equation}
+so even for good VLBI priors they typically carry $\sim30$--$90$ unresolved cycles. For example, a pulsar at $L_p = 1$~kpc with $\delta L_p/L_p = 1\%$ and $f_P = 50$~nHz has $\sigma_\tau \approx 33$~yr and $\Delta N \approx 50$, while the same pulsar at $f_P = 100$~nHz has $\Delta N \approx 100$. Optical astrometry provides a complementary route: Gaia detections of white-dwarf companions already improve a subset of MSP distances by \mbox{$30$--$50\%$}~\cite{Moran2023}, and Roman should extend this approach to much fainter systems~\cite{McKinnon2026}.
+
+Only the small set of pulsars within $ L_{p,\max} \simeq 280\text{--}390~{\rm pc}$ can individually lock the echo phase at 10~nHz, the lowest frequency at which we evaluate the anchor criterion $\delta L_p < c/(2\pi f)$ and where the requirement is least stringent. The number of such anchors scales steeply with astrometric precision and with the echo frequency as $N_{\rm anchor}\propto(\sigma_\varpi\,f)^{-3/2}$, because $L_{p,\max}\propto(\sigma_\varpi\,f)^{-1/2}$ and the accessible local volume scales as $L_{p,\max}^3$ (Eq.~\eqref{eq:Nanchor_scaling}). This is why the expected anchor population is only $\mathcal{O}(3$--$5)$ at 10~nHz and drops to $\mathcal{O}(1)$ by 30~nHz.
+
+Since $\mu$Ares supplies the waveform template, each pulsar term can be searched for through a one-dimensional matched filter over $\tau_i$. For the optimistic source, the combined array (Table~\ref{tab:horizon}) yields $\rho_{\rm comb}\approx27$ at $D_L=100$~Mpc, with hundreds of pulsars contributing at $\rho_i>1$ across a broad range of look-back times and pulsar-term frequencies. The anchors provide the absolute phase locks, while the larger population of VLBI-calibrated pulsars supplies additional, though multimodal, constraints on the phase history. In this regime the pN decomposition can be tested for consistency across thousands of accumulated GW cycles.
+
+The practical difficulty is that the likelihood is periodic in the look-back time for each non-anchor pulsar. The echo phase determines $\tau_i$ only modulo $1/f_P$, corresponding to a distance ambiguity of order $\delta L_p \sim \frac{c}{f_P} \sim 0.3~{\rm pc}$
+at $f_P\sim30$~nHz. The anchor pulsars break this ambiguity by fixing the absolute phase at known epochs, but the remaining network still produces a likelihood with many discrete peaks separated by the cycle period $1/f_P$. A realistic phase-connection analysis will therefore require anchors to lock the global phase while VLBI priors guide the selection among the residual cycle aliases. Demonstrating this in realistic noise injections is a clear target for future work.
+
+% ======================================================================
+
+\section{Sky localization via echo rings}\label{sec:skyloc}
+
+The angular dependence of the single-pulsar SNR (Sec.~\ref{sec:snr_angle}) implies that each pulsar is sensitive to echoes from sources lying within a characteristic annular ring on the sky, centered on the pulsar at radius $\sim\theta_{\rm opt}$ Eq.~\eqref{eq:theta_opt} with width set by the condition $\rho>\rho_{\rm thr}$. A detection constrains the source to that ring, while a nondetection excludes it. With multiple pulsars, the intersection of detected rings and the complement of nondetected rings rapidly narrows the allowed sky region.
+
+Figure~\ref{fig:skyloc} illustrates this for the optimistic binary (Table~\ref{tab:scenarios}) using five pulsars with $\sigma_{\rm TOA}=30$~ns (a best-precision target, cf.\ Fig.~\ref{fig:snr_vs_theta}) and 30-year baselines. Three pulsars at favorable sky locations detect the echo, while the remaining two contribute through nondetections. The color scale shows the number of constraints satisfied at each sky position, and the black region satisfies all constraints simultaneously. Even this simple configuration, which we chose for illustrative purposes, localizes the source to $\lesssim 1$~sr. This is coarser than the $\mu$Ares sky map, but the echo-ring localization remains valuable: it provides an independent sky constraint from a completely different measurement technique, serves as a consistency check that the detected pulsar terms originate from the same source, and for non-Tier~3 sources where the $\mu$Ares error box is larger, partial overlap between the echo rings and the $\mu$Ares localization could exclude regions of parameter space.
+
+To quantify this behavior statistically, we repeat the exercise over many realizations and different numbers of high-precision pulsars. Table~\ref{tab:skyloc} lists the median, 5th, and 95th percentile sky areas for 5, 10, 20, 50, and 100 pulsars with $\sigma_{\rm TOA}=30$~ns, together with the median number of pulsar terms with SNR$>5$, $N_{\rm det}^{\rm med}$. For small arrays the localization region is typically hundreds to thousands of deg$^2$, consistent with only one or two pulsars detecting the echo\footnote{The detectable range of angles is $16^{\circ}\lesssim\theta\lesssim66^{\circ}$, an annulus covering about 28\% of the sky, so a randomly placed pulsar has a 28\% chance of detecting the pulsar term.}. As more pulsars are added, the localization improves substantially, reaching tens to hundreds of deg$^2$ with 20--50 high-precision pulsars.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{psr_term_localisation_example_5psr_3det_optimistic_100426.png}
+  \caption{Sky localization of the optimistic source using five pulsars with $\sigma_{\rm TOA}=30$~ns. Filled circles mark pulsars that detect the echo, while crosses mark nondetections. The color scale shows the number of detection and exclusion constraints satisfied at each sky position. The black patch satisfies all constraints and recovers the true source location (pink star).}
+  \label{fig:skyloc}
+\end{figure}
+
+\begin{table}[t]
+\caption{Statistics of echo-ring localization for the optimistic binary ($10^9\;\Msun$, $D_L=100$~Mpc) as a function of the number of high-quality pulsars with $\sigma_{\rm TOA}=30$~ns. We report the median number of individually detected pulsar terms with SNR$>5$, $N_{\rm det}^{\rm med}$, together with the median and 5th and 95th percentiles of the reconstructed sky area ($A_{\rm med}$, $A_{\rm 5th}$, $A_{\rm 95th}$).}\label{tab:skyloc}
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrr}
+\hline\hline
+$N_{\rm psr}$ & $N_{\rm det}^{\rm med}$ & $A_{\rm 5th}$ [deg$^2$] & $A_{\rm med}$ [deg$^2$] & $A_{\rm 95th}$ [deg$^2$] \\
+\hline
+5   & 1  & 750 & 4,100 & 11,700 \\
+10  & 3  & 140 & 1,000 & 3,800 \\
+20  & 5  & 27  & 230   & 1,000 \\
+50  & 14 & 4   & 36    & 170 \\
+100 & 28 & 1   & 9     & 45 \\
+\hline\hline
+\end{tabular}
+\end{table}
+
+These are conservative estimates in the sense that they use only the binary classification of each pulsar as a detection or nondetection within the allowed annulus. In practice, each detected pulsar term also provides an amplitude $r_{P,i}$ Eq.~\eqref{eq:residual}, a frequency $f_{P,i}$ Eq.~\eqref{eq:fP_exact}, and, when phase information is available, an additional timing constraint. Requiring consistency with the Earth-term parameters should therefore further reduce the allowed sky region.
+
+\section{Science return from a golden binary}\label{sec:science}
+
+The detectability analysis in Sec.~\ref{sec:detectability} used the optimistic scenario at 100~Mpc as a round-number benchmark to survey the array performance. We now ask what happens at the boundary where the echo program becomes feasible. Two independent constraints set this boundary. First, the PTA sensitivity analysis gives a Tier-3 horizon of $\sim80$~Mpc for a face-on $10^9\;\Msun$ binary (Table~\ref{tab:horizon}): this is the maximum distance at which three or more anchor pulsars can phase-lock the echo waveform. Second, the population estimate in Appendix~\ref{app:population_estimate} predicts that the expected number of near-equal-mass $10^9\;\Msun$ binaries in the PTA band crosses unity at $D\approx83$~Mpc (Fig.~\ref{fig:Nsmbhb}). These independent estimates coincide near $\sim80$~Mpc, so the local Universe should contain at least one source close enough for phase-coherent reconstruction.
+
+We therefore adopt $D_L=80$~Mpc as the fiducial distance for an equal-mass binary with $M_{\rm tot}=10^9\;\Msun$, $f_E=1\;\mu$Hz, and aligned spins $\chi=0.98$. At this distance the source exceeds the Tier~1 and Tier~2 thresholds: $\rho_{\rm comb}\approx33$ and $N(\rho_i\ge3)=24$, with two anchor pulsars detected at $\rho_i\ge3$. We call this a \emph{golden binary}: one system for which the Earth term and the individually resolved pulsar terms are available, and for which the anchor population is large enough to phase-lock the waveform. This is the most ambitious of the three tiers, and its feasibility depends on pulsar distances reaching the precision tabulated in Appendix~\ref{app:anchors}. We use this source as a worked example that shows what the echo framework can deliver. Table~\ref{tab:science_summary} summarizes the main results.
+
+\begin{table*}[t]
+\caption{Demonstrated results and future prospects for a golden binary ($10^9\;\Msun$, $D_L=80$~Mpc, $\chi=0.98$). The first two blocks list quantities computed in this work. The final block lists prospective targets that require dedicated follow-up modeling, only the circumbinary-disk entry is estimated quantitatively here.}\label{tab:science_summary}
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l l l p{5.6cm} r}
+\hline\hline
+Stage & Measurement & Value & Physical insight & Reference \\
+\hline
+\multirow{2}{*}{$\mu$Ares Earth term}
+& Spin $\chi$ & $\sigma_\chi \lesssim 10^{-8}$ & BH growth history & Eq.~\eqref{eq:sigma_chi_earth} \\
+& Masses, sky, inclination & $\rho_E \gtrsim 8\!\times\!10^6$ & Template for echo search & Sec.~\ref{sec:detectability} \\[3pt]
+\hline
+\multirow{6}{*}{Echo detection}
+& Echo frequencies $f_{P,i}$ & 20--170~nHz & Inspiral rate at $100$--$1,000$~yr & Table~\ref{tab:scenarios} \\
+& Network echo SNR & $\rho_{\rm comb} \approx 33$ & Confirms binary; horizon $\sim$530~Mpc & Table~\ref{tab:horizon} \\
+& J0437 spin bin-shift & $|\Delta f_P| \sim 0.5$--$1.0$~nHz & Spin-induced shift across scenarios, marginal at $T_{\rm obs}=50$~yr & Table~\ref{tab:scenarios} \\
+& Sky localization & $\sim$30--230~deg$^2$ & Sky localization with 20--50~psr & Table~\ref{tab:skyloc} \\
+& pN consistency test & $\delta\phi_{1\rm pN}\lesssim 0.2\%$, $\delta\phi_{1.5\rm pN}\lesssim 0.7\%$ & Weak-field test of 1pN, 1.5pN dynamics & Sec.~\ref{sec:science} \\
+& Pulsar distances & $\delta L_p \sim 0.3$~pc & Cycle-resolved distance at $\sim c/f_P$ & Sec.~\ref{sec:phase_connection} \\[3pt]
+\hline\hline
+\multirow{5}{*}{Prospective}
+& Circumbinary disk & $\delta\Phi \sim -1$ to $-9$~rad & Accretion rate; sensitivity to $\varepsilon \gtrsim 10^{-5}$ & Sec.~\ref{sec:environment} \\
+& Boson clouds & --- & Constraints for $\alpha\sim0.1$--$0.3$ & Sec.~\ref{sec:environment} \\
+& Dark-matter spike & --- & Dark-matter density profile & Sec.~\ref{sec:environment} \\
+& Eccentricity & --- & Circularization history & Sec.~\ref{sec:environment} \\
+& Tests of General Relativity & --- & Scalar-tensor gravity; massive graviton & Sec.~\ref{sec:environment} \\
+\hline\hline
+\end{tabular}
+\end{table*}
+
+\textit{Step~1: Earth-term detection.}---$\mu$Ares detects the source at $\rho_E \gtrsim 8\times10^6$, measuring the binary masses, spins, sky location, and inclination. At $f_E=1\;\mu$Hz, the binary merges in $\sim0.8$~yr, so $\mu$Ares follows the final inspiral and merger directly. The PTA search is naturally retroactive: each pulsar recorded the binary at its own retarded epoch $\tau_i$, when the system was still deep in the adiabatic inspiral. Once the Earth-term waveform is known, the archived pulsar terms become a targeted search problem. The 2pN truncation used throughout is adequate for the $\delta\phi_{1\rm pN}$ and $\delta\phi_{1.5\rm pN}$ consistency tests reported in Sec.~\ref{sec:science}. A $\delta\phi_{2\rm pN}$ test, or propagation through the strong-field merger, would require 3pN and higher terms.
+
+\textit{Step~2: Echo recovery.}---The matched-filter search over $\tau_i$ then identifies the pulsar terms across the array. For the golden binary, the combined PTA SNR is $\rho_{\rm comb}\approx33$. Among the IPTA~2050 pulsars with 50-year baselines, up to 24 individually resolve the echo at $\rho_i \ge 3$, spanning the pulsar-term frequency range set by the array light-travel delays (Sec.~\ref{sec:horizon}), corresponding to look-back times from hundreds to thousands of years. This rises sharply from the $N_{\rm det}=2$ reported in Table~\ref{tab:horizon} at 100~Mpc because the per-pulsar $\rho_i$ distribution is bunched just below threshold at that distance, so the 25\% SNR boost from reducing $D_L$ to 80~Mpc boosts tens of pulsars over $\rho_i = 3$. At this stage the PTA confirms the binary's presence through the combined SNR $\rho_{\rm comb}$ and through the consistency of individually recovered echo frequencies with the backward-propagated $\mu$Ares template. Because each pulsar samples a different retarded epoch, the ensemble of recovered frequencies $f_{P,i}$ maps the binary's past inspiral directly.
+
+\textit{Step~3: Cycle budget.}---The per-order cycle budget at the canonical 1~kpc baseline ($\tau\approx3{,}262$~yr) is read off the Optimistic row of Table~\ref{tab:scenarios}: a Newtonian contribution of order $10^4$ cycles, an $\mathcal{O}(10^2)$ correction at 1pN, and a small net 1.5pN piece arising from a near-cancellation between the tail and spin-orbit terms of Eq.~\eqref{eq:cycles}. The farthest anchor pulsar, at $L_{p,\max}\approx390$~pc and $\tau\approx1{,}272$~yr, samples a shorter baseline but the same qualitative structure: about $4{,}045$ Newtonian cycles, $+90$ at 1pN, and a 1.5pN near-cancellation of $-63$ (tail) and $+39$ (spin-orbit). Because these contributions scale differently with frequency, pulsars at different $\tau_i$ sample distinguishable slices of the post-Newtonian phase evolution rather than repeating the same measurement.
+
+\textit{Step~4: Phase connection.}---The spin phase uncertainty from $\mu$Ares is negligible, see Sec.~\ref{sec:spin}. The bottleneck is pulsar distance precision. Anchor pulsars provide absolute phase reference points and directly lock the waveform at their respective look-back times. Pulsars with good VLBI distance priors still carry the cycle ambiguities quantified in Sec.~\ref{sec:phase_connection}, but once the anchors fix the global phase they provide additional informative constraints. For the golden binary, two anchors supplemented by $\sim20$ VLBI-calibrated MSPs~\cite{Deller2019,Ding2023} should suffice to constrain the waveform over the full PTA baseline, though a full injection-recovery demonstration with realistic noise has not yet been carried out.
+
+\textit{Step~5: Science return.}---Once the waveform is phase connected, the echoes become a direct long-baseline test of the binary's secular evolution. A coherent PTA echo data set checks whether the vacuum inspiral predicted by the Earth-term template remains self-consistent over $\sim10^3$~yr. Any failure of coherence that correlates systematically with look-back time signals additional physics beyond the modeled post-Newtonian inspiral. This is the regime in which echoes move beyond proof of principle and become a precision probe of binary environments and GW propagation.
+
+\subsection{Consistency tests of the secular inspiral}
+
+With the $\mu$Ares template fixing the waveform, each anchor pulsar (Sec.~\ref{sec:detectability}) independently constrains the accumulated phase over its own look-back baseline with no cycle ambiguity. For the golden binary, two anchors at $\tau \lesssim 1{,}300$~yr supply sub-radian measurements of the phase at known retarded epochs.
+
+Using the farthest-anchor cycle budget from Step~3 above, in a parameterized post-Newtonian framework where $\phi_n \rightarrow \phi_n(1+\delta\phi_n)$, a sub-radian phase measurement constrains
+\begin{equation}\label{eq:dphi_n}
+\delta\phi_n \lesssim \frac{1}{2\pi N_n}\, ,
+\end{equation}
+which implies $\delta\phi_{1\rm pN} \lesssim 0.2\%$ and $\delta\phi_{1.5\rm pN} \lesssim 0.7\%$. This is a weak-field test of SMBHB inspiral dynamics at mass scales and baselines unavailable to either ground-based detectors or LISA.
+
+The longer-baseline VLBI-calibrated pulsars carry the cycle ambiguities discussed in Sec.~\ref{sec:phase_connection}, but once the anchors select the correct branch they extend the tested baseline from $\sim1{,}300$ to $\sim3{,}000$~yr. In that regime the full array checks whether the same vacuum inspiral model remains self-consistent across all the independent retarded epochs. A quantitative injection-recovery study determining the minimum anchor count needed for reliable branch selection has not yet been carried out.
+
+\subsection{Environmental and beyond-GR sensitivity}\label{sec:environment}
+
+The same phase precision that enables a post-Newtonian consistency test also makes the echoes sensitive to any cumulative perturbation to the inspiral: the echo baselines integrate small deviations over thousands of wave cycles, while the anchor pulsars fix the phase well enough that those deviations cannot be absorbed into a biased chirp mass or spin unless they share the same frequency dependence. This makes them sensitive to environmental effects and certain beyond-GR modifications.
+
+Circumbinary disk torques provide the clearest example~\cite{HaimanKocsisMenou2009,Duffell2020,Siwek2024}. In the pulsar-term frequency range ($\sim20$--$170$~nHz), the instantaneous disk torque is subdominant to GW backreaction, but its effect accumulates coherently over the full baseline. For a decoupling frequency $f_{\rm dec}=3$~nHz, representative of gas-pressure-dominated circumbinary disks around $\sim10^9\;\Msun$ binaries~\cite{HaimanKocsisMenou2009}, numerical integration in a constant-torque model gives a dephasing of order $\delta\Phi \approx -1$ rad over 1{,}000~yr, $\approx -7$ rad over the canonical 3{,}262~yr baseline, and $\approx -9$ rad at a J1713-like 3{,}800~yr baseline, setting the $-1$ to $-9$ rad range quoted in Table~\ref{tab:science_summary}. Shallower constant-$\dot a$ models give $\sim -20$~rad on the same baseline, while steeper constant-$\dot E$ models give sub-radian signatures at or below the threshold set by $\varepsilon_{\min}$. The negative sign reflects that the disk accelerates the inspiral, so the real binary's phase at any past retarded epoch is less advanced than the vacuum-template backward propagation from $f_E$ predicts. Even a conservative disk can therefore produce order-radian signatures in the golden-binary regime. Because the induced phase correction scales more steeply with frequency than the vacuum pN terms, it is separable across pulsars sampling different $\tau_i$. Written as a threshold on the disk-to-GW frequency-derivative ratio $\varepsilon \equiv \dot f_{\rm disk}/\dot f_{\rm GW}$, a 1-radian sensitivity over $N_{\rm vac}\sim7{,}300$ cycles at $\tau\approx3{,}262$~yr corresponds to $\varepsilon_{\min} \sim 1/(2\pi N_{\rm vac}) \sim 2\!\times\!10^{-5}$. A full forecast requires coupling the echo formalism to detailed circumbinary-disk simulations~\cite{SiwekWH2023,Tiede2025}, so we leave that to a dedicated follow-up study.
+
+For completeness, we note that the same logic applies more broadly. Superradiant boson clouds~\cite{Arvanitaki2010,Brito2015,Baumann2019}, whose instability rate peaks at gravitational fine-structure coupling $\alpha \equiv GM\mu_b/(\hbar c)\sim0.1$--$0.3$, dark-matter spikes~\cite{Gondolo1999,AlonsoAlvarez2024}, residual eccentricity~\cite{Peters1964,DOrazio2021,Taylor2016}, dipolar radiation from scalar-tensor gravity~\cite{Yunes2009,Barausse2016}, and massive-graviton dispersion~\cite{Will1998,ZhengLarsenEisenbergMingarelli2026} all imprint phase signatures whose frequency dependence differs from the standard pN hierarchy. Some of these effects are source intrinsic, altering the inspiral rate, while others act during propagation and accumulate with pulsar distance. A massive graviton, for example, produces a pulsar-term phase shift scaling as $\Delta\Phi^{\rm Disp}\propto m_g^2 L_p/\omega$~\cite{ZhengLarsenEisenbergMingarelli2026}, which grows with kpc baseline and cannot be mimicked by a source parameter alone. Dipolar radiation enters at $-1$pN order, where the low velocities probed by the echoes are especially advantageous.
+
+We do not claim quantitative constraints on these effects here. What we establish is the measurement regime in which such constraints become possible: a $\mu$Ares template fixes the intrinsic binary parameters, the anchor pulsars control the phase, and the remaining array samples the dephasing across many retarded epochs.
+
+% ======================================================================
+\section{Discussion and Conclusions}\label{sec:discussion}
+
+The central result of this work is that a $\mu$Hz detection of a nearby massive SMBHB turns PTA pulsar terms from noise into a usable record of the binary's earlier inspiral. Once the Earth-term waveform is known, the archived pulsar terms become targeted gravity echoes that probe the binary at retarded epochs spanning hundreds to thousands of years. This opportunity is confined to the high-mass tail of the SMBHB population, $M_{\rm tot} \gtrsim 10^{8.5}\;\Msun$ within a few hundred Mpc, but within that window the echoes define a distinct multiband observable. Typical LISA-band sources are not massive enough to generate measurable PTA pulsar terms.
+
+% The $\mu$Ares Earth term constrains the binary spin far more precisely than required for phase-coherent tracking. The remaining challenge is pulsar distance precision: non-anchor pulsars carry cycle ambiguities that produce a periodic likelihood in the look-back time (Sec.~\ref{sec:phase_connection}). A realistic pipeline that propagates the $\mu$Ares template through the PTA archive in the presence of red noise, stochastic-background contamination, and imperfect distance priors has not yet been demonstrated, but this is a well-defined data-analysis problem rather than a fundamental limitation.
+
+% The anchor pulsar population is therefore central. At $\gtrsim10$~nHz, the expected number of anchors is only $\mathcal{O}(3$--$5)$, and whether that is sufficient depends on the actual noise properties and sky distribution of those specific pulsars. This small-N regime is uncomfortable but not fatal. The echoes are not a statistical-background measurement that requires hundreds of identical baselines. They are a targeted deterministic search in which a few phase-stable anchors can lock the global solution while a larger set of VLBI-calibrated pulsars constrains the remaining cycle branches. The next step is an end-to-end injection-and-recovery pipeline with realistic PTA noise and distance priors.
+
+The science return has a natural hierarchy. At the lowest useful level, the PTA finds that the Earth-term source left a deterministic retarded imprint across the array. Once individual pulsar terms are resolved, the recovered frequencies $f_{P,i}$ at known look-back times $\tau_i$ already test the secular inspiral rate without requiring full phase connection. In the ideal regime, where multiple anchors remove the cycle ambiguity, the array traces the waveform coherently across thousand-year baselines and enables sub-radian consistency checks of the post-Newtonian phase. This is the regime in which the echoes become sensitive to environmental torques and beyond-GR propagation effects.
+
+% However, these additional science targets remain prospective. Circumbinary disks, boson clouds, dark-matter spikes, residual eccentricity, dipolar radiation, and massive-graviton dispersion are all plausible sources of measurable dephasing, but quantitative forecasts require dedicated forward modeling beyond what is developed here. The point established in this paper is narrower and stronger: the echo framework creates the measurement regime in which such effects could become accessible.
+
+The expected number of golden binaries remains uncertain because the sub-parsec binary fraction is poorly constrained. PTA continuous-wave searches~\cite{NG15cw}, improved measurements of the stochastic background, and better empirical constraints on the massive end of the black hole mass function will sharpen this forecast well before a $\mu$Hz mission flies. The absence of a continuous-wave detection today does not argue against the echo program. A $10^9\;\Msun$ binary that is now in the $\mu$Hz band would have crossed the PTA band long before present-day observations began, and the echo search is performed retroactively on the PTA archive once the Earth-term template becomes available. If the binary is accreting, the $\mu$Ares detection may also be accompanied by an electromagnetic counterpart from the circumbinary disk~\cite{Ennoggi2026}, providing independent confirmation of the source and its host galaxy.
+
+While the full realization of this echo program awaits a $\mu$Hz detector, the conceptual framework and much of the required infrastructure can already be developed with existing PTA data. The first two directions below deliver independent science without any $\mu$Hz input, bounding the local high-mass SMBHB population and determining the achievable Tier-3 anchor set. The third lays the data-analysis groundwork for the eventual Earth-term detection.
+
+\textit{Blind echo searches.}---Current continuous-wave search pipelines~\cite{NG15targeted} already target individual SMBHBs across the nHz band. These searches are sensitive to pulsar terms, though they do not exploit them as echo probes because the source parameters are largely unknown. For a massive binary in the $\mu$Ares detection window ($M_{\rm tot} \gtrsim 10^{8.5}\;\Msun$) that has already evolved through the PTA band, the echo signal from its earlier inspiral persists in the timing residuals at $f_P \sim 20$--$170$~nHz. A targeted search toward the most massive nearby galaxies ($M_{\rm BH} \gtrsim 10^9\;\Msun$ within $\sim100$~Mpc) from the MASSIVE catalog~\cite{Ma2014} could set quantitative bounds on the echo-signal amplitude from nearby high-mass binaries, constraining the population independently of the GWB. Even a non-detection would tighten the population models used in Sec.~\ref{sec:detectability}.
+
+\textit{Pulsar distance campaigns.}---The anchor-pulsar population, explored in more detail in Appendix~\ref{app:anchors}, is the long-lead item for phase-coherent science. Continued VLBI campaigns targeting the nearest PTA MSPs (Appendix~\ref{app:anchors}), combined with Gaia and Roman astrometry to binary companions~\cite{Moran2023,McKinnon2026}, will determine whether 3--5 anchors are achievable at 10~nHz before $\mu$Ares flies. Every improvement in parallax precision for pulsars within $\sim400$~pc directly expands the Tier~3 capability.
+
+\textit{Pipeline development.}---The Bayesian phase-connection pipeline described in Sec.~\ref{sec:phase_connection}, which must navigate a multimodal posterior from cycle ambiguities across $\sim20$ VLBI-calibrated pulsars, can be developed and tested on simulated data now. Injection-recovery studies with realistic noise models would establish the minimum anchor count and distance precision required for Tier~3 science, and would determine whether the cycle ambiguities of non-anchor pulsars (Sec.~\ref{sec:phase_connection}) can be resolved in practice.
+
+% ======================================================================
+% \section{Conclusions}\label{sec:conclusions}
+
+% The echo signals are accumulating in PTA data now. Every additional year of precision timing extends the archive that can be exploited once a $\mu$Hz detector provides the Earth-term waveform template. No fundamentally new PTA observing program is required: the same ingredients already needed for nHz continuous-wave discovery also prepare the field for echo science, namely long baselines, low timing residuals, improved cadence, and better pulsar distances. Continued VLBI campaigns, future SKA-VLBI baselines, and optical astrometry from Gaia and Roman can decrease the distance uncertainties that currently drive the phase-connection problem.
+
+% We establish the measurement regime in which gravity echoes become possible. A $\mu$Hz Earth-term detection turns the pulsar terms of a nearby massive SMBHB into targeted probes of its earlier inspiral. In this regime the science proceeds in a clear hierarchy: a network echo detection confirms the source across the PTA, individually resolved pulsar terms recover the inspiral at discrete retarded epochs, and anchor pulsars enable phase-coherent reconstruction over $10^2$--$10^3$~yr baselines. For a golden binary, this opens sub-radian tests of the post-Newtonian phase evolution and creates a framework in which environmental and beyond-GR dephasings could be measured.
+
+% The remaining open question is data analysis: the $\mu$Ares Earth term supplies the required spin precision with five orders of magnitude to spare, and the source population is consistent with existing GWB measurements, so the physics is in hand. What remains is to demonstrate an end-to-end phase-connection pipeline that combines the Earth-term template, anchor-pulsar phase locks, VLBI distance priors, and per-pulsar noise models in the presence of cycle ambiguities. This is a concrete and well-posed problem that can be addressed with injection-recovery studies on simulated data using tools already available today.
+
+% The decisive missing capability is therefore a detector in the $\mu$Hz band. A mission such as $\mu$Ares would close the gap between LISA and PTAs and deliver the Earth-term waveform template on which the entire program rests. Once that template is available, decades of pulsar timing data become a multiband GW observatory---a treasure trove of black hole evolution recorded thousands of years in the past.
+
+The observational implications are therefore straightforward. On the PTA side, the same program already needed for continuous-wave discovery also prepares for echo science: long baselines, low timing residuals, improved cadence, and better pulsar distances. On the space-based side, the decisive missing capability is a detector in the $\mu$Hz band. A mission such as $\mu$Ares would close the frequency gap between LISA and PTAs and provide the Earth-term waveform template on which the advanced science program rests. If that capability is realized, decades of archived pulsar timing data become a multiband observatory of SMBHB evolution thousands of years in the past.
+
+\begin{acknowledgments}
+C.M.F.M.\ thanks D. Spergel, W. M. Farr, M. Isi, and V. Ozolins for useful conversations. She acknowledges support from the NSF NANOGrav Physics Frontiers Center (award PHY-2020265) and NASA LPS 80NSSC24K0440. During the final stages of preparing this manuscript, we became aware of concurrent work by Criswell et al.\ (in prep) on pulsar terms in the post-merger regime.
+\end{acknowledgments}
+
+% ======================================================================
+\section*{Software}
+
+This work made use of
+\texttt{hasasia}~\cite{Hazboun2019hasasia,HazbounRS2019} for PTA sensitivity curve computation and deterministic continuous-wave signal-to-noise ratio estimates,
+\texttt{gwent}~\cite{Kaiser2021} for multiband detector noise modeling,
+\texttt{NumPy}~\cite{numpy2020},
+\texttt{SciPy}~\cite{scipy2020},
+\texttt{Matplotlib}~\cite{matplotlib2007},
+and \texttt{Streamlit}~\cite{streamlit} for the interactive sensitivity visualization.
+The post-Newtonian evolution library and the multiband sensitivity dashboard \texttt{app.py} are available at \url{https://github.com/ChiaraMingarelli/gravity-echoes}. A hosted version of the interactive dashboard is at \url{https://gravityecho.streamlit.app}.
+Codes were written and edited with the assistance of Claude Code (Anthropic).
+
+% ======================================================================
+\appendix
+
+% ======================================================================
+
+\section{Intrinsic pulsar red noise}\label{app:rednoise}
+
+The PTA sensitivity curves shown in this work include the effect of intrinsic pulsar red noise, which dominates the per-pulsar noise budget below $\sim10$~nHz and therefore sets the practical low-frequency boundary of the pulsar-term frequency range. We model the red noise as a power-law contribution to each pulsar's noise covariance matrix,
+\begin{equation}\label{eq:rn_psd}
+ P_{\rm RN}(f) = \frac{A^2}{12\pi^2}
+ \left(\frac{f}{f_{\rm yr}}\right)^{-\gamma}\mathrm{yr}^3\,,
+\end{equation}
+where $A$ is the red-noise amplitude and $\gamma$ is the spectral index.
+
+For the IPTA~2050 projections, we draw per-pulsar red-noise parameters from ranges representative of the detected achromatic red noise across the NANOGrav 15-year custom-noise analysis~\cite{NG15noise}: $\log_{10}A$ uniformly distributed in $[-15,-12]$ and $\gamma$ uniformly distributed in $[1,5]$. These intervals span the posterior envelope of per-pulsar red-noise detections across the pulsars favoring Fourier-basis Gaussian-process noise models in that analysis, including both steep spin-noise spectra ($\gamma\sim4$--$5$) and shallower processes ($\gamma\sim1$--$2$).
+
+The red noise is incorporated through the pulsar covariance matrix $\mathbf{N}$ using \texttt{hasasia}'s \texttt{sim\_pta} routine~\cite{Hazboun2019hasasia}, which converts the power-law PSD into a time-domain covariance and adds it to the white-noise diagonal. Deterministic continuous-wave sensitivity is then computed from the full covariance following Hazboun, Romano, \& Smith~\cite{HazbounRS2019}.
+
+Because the pulsar-term frequency range emphasized in the main text lies mostly above $\sim20$~nHz, where intrinsic red noise is subdominant for many PTA pulsars, the order-of-magnitude detectability estimates are reasonably approximated by white noise alone. This approximation breaks down below $\sim10$~nHz, where both pulsar red noise and the stochastic background become important, and is the main reason we treat the lower-frequency extension of the echo program conservatively in the main text.
+
+% ======================================================================
+
+\section{Anchor pulsars at 10~nHz}\label{app:anchors}
+
+Phase-coherent echo analysis requires each pulsar's distance uncertainty to satisfy $\delta L_p < c/(2\pi f)$, so that the pulsar-term phase is known to better than one radian. If the distance is determined by parallax with $\sigma_\varpi \ll \varpi$, the distance uncertainty is $\delta L_p \simeq \sigma_\varpi L_p^2/(1\,{\rm AU})$, with $\sigma_\varpi$ in radians. Combining these gives the maximum distance at which a pulsar can serve as an anchor,
+\begin{equation}\label{eq:dmax_anchor}
+L_{p,\max}(f,\sigma_\varpi)
+= \left[\frac{(1\,{\rm AU})\,c}{2\pi f\,\sigma_\varpi}\right]^{1/2}
+\simeq 393~{\rm pc}\;
+f_{10}^{-1/2}\,\sigma_{\varpi,1}^{-1/2},
+\end{equation}
+where $f_{10}\equiv f/(10~{\rm nHz})$ and $\sigma_{\varpi,1}\equiv \sigma_\varpi/(1~\mu{\rm as})$. Even for $\sigma_\varpi=1~\mu$as, strict coherence at 10~nHz is limited to $L_{p,\max}\simeq393$~pc. For a more conservative SKA-era precision of $\sigma_\varpi=1.5$--$2~\mu$as, the horizon shrinks to $L_{p,\max}\simeq278$--$321$~pc.
+
+\subsection{Current census}\label{app:census}
+
+The nearest PTA pulsars and their present distance constraints are summarized in Table~\ref{tab:anchors}. Among currently timed PTA millisecond pulsars, only PSR~J0437$-$4715 satisfies the 10~nHz coherence threshold. Its distance, $156.96\pm0.11$~pc, is obtained from the orbital-period derivative via the Shklovskii effect~\cite{Reardon2024}, not from parallax alone. The timing parallax by itself, $L_p=155.4\pm0.9$~pc, would not meet the anchor requirement. This makes J0437 exceptional: its short orbital period, bright companion, and long timing baseline enable a level of astrometric precision that is not generally available for the rest of the PTA.
+
+The next-best candidate is PSR~J0030$+$0451 at $L_p\simeq330$~pc~\cite{Ding2023}, which remains tens of times above the parallax precision required for strict phase coherence at 10~nHz. It is therefore important to distinguish between true anchors, which satisfy $\delta L_p<c/(2\pi f)$ and can lock the echo phase absolutely, and pulsars with merely useful distance priors, which still constrain the search volume and help select among cycle branches.
+
+\subsection{Population estimate}\label{app:population}
+
+To estimate the size of the future anchor population, we write
+\begin{equation}\label{eq:Nanchor_def}
+N_{\rm anchor}(f) = \eta_{\rm PTA}\,N_{\rm loc}(<L_{p,\max}),
+\end{equation}
+where $N_{\rm loc}$ is the number of observable millisecond pulsars within $L_{p,\max}$ and $\eta_{\rm PTA}$ is the fraction that are PTA-grade, meaning bright, rotationally stable, non-eclipsing, and astrometrically clean.
+
+For the local MSP density we adopt the observed surface density $\Sigma_{\rm MSP}\simeq157\pm85~{\rm kpc}^{-2}$ above $0.3$~mJy~kpc$^2$~\cite{Lyne1998}, together with a vertical scale height $z_0\simeq0.5$~kpc~\cite{Levin2013}. Within a few hundred parsecs the scale height is effectively constant, so the accessible local population scales approximately as volume, $N_{\rm loc}(<L_{p,\max})\propto L_{p,\max}^3$. Combining this with Eq.~\eqref{eq:dmax_anchor} gives
+\begin{equation}\label{eq:Nanchor_scaling}
+N_{\rm anchor}(f)\propto(\sigma_\varpi\,f)^{-3/2}.
+\end{equation}
+This steep dependence is the main reason the anchor population is expected to be only $\mathcal{O}(3$--$5)$ at 10~nHz and to drop to $\mathcal{O}(1)$ by 30~nHz.
+
+This estimate should be interpreted cautiously. The uncertainty is dominated not by the local MSP count itself, but by $\eta_{\rm PTA}$: only a subset of nearby MSPs will be suitable for PTA-quality timing and for high-precision astrometry.
+
+\begin{table}[t]
+\caption{Nearest PTA millisecond pulsars and their distance constraints. The column $\sigma_{\varpi,\rm req}$ gives the parallax precision needed for phase coherence at 10~nHz, and the Factor column is the ratio of the current parallax uncertainty to this requirement. Only J0437$-$4715 currently satisfies $\delta L_p < 0.15$~pc.}\label{tab:anchors}
+\centering
+\begin{tabular}{lccccll}
+\hline\hline
+Pulsar & $L_p$ & $\delta L_p$ & $\sigma_{\varpi,\rm req}$ & Factor & Status & Ref. \\
+       & pc    & pc           & $\mu$as                    &        &        &      \\
+\hline
+J0437$-$4715  & 157 & 0.11 & 6.3 & --- & anchor & \cite{Reardon2024} \\
+J0636$-$3044  & 230 & 37 & 2.9 & $240\times$ & SKA target & \cite{Shamohammadi2024} \\
+J0030$+$0451  & 329 & 5.4 & 1.4 & $35\times$ & SKA target & \cite{Ding2023} \\
+J1744$-$1134  & 395 & 4.7 & 1.0 & $30\times$ & beyond horizon & \cite{Deller2019} \\
+J2124$-$3358  & 410 & 17 & 0.9 & $110\times$ & beyond horizon & \cite{Deller2019} \\
+\hline\hline
+\end{tabular}
+\end{table}
+% ======================================================================
+
+\section{Binary population estimate}\label{app:population_estimate}
+
+In this appendix we estimate the expected number of nearby SMBHBs currently inspiralling between $f_{\rm GW}=1$~nHz and merger. These are the sources whose Earth- and pulsar-term GW emission is accessible to the echo program. The calculation has four ingredients: (i) the local black hole mass function from Liepold \& Ma~\cite{LiepoldMa2024}, (ii) the mass-specific binary occupation fraction derived from the pairing rate of Casey-Clyde et al.~\cite{CaseyClyde2025}, (iii) the near-equal-mass weighting appropriate to the fiducial binaries considered in the main text, and (iv) propagation of the associated parameter uncertainties.
+
+\textit{Step~1: Black-hole host census.}---The Liepold \& Ma~\cite{LiepoldMa2024} $z=0$ black-hole mass function, derived from the MASSIVE survey~\cite{Ma2014} via the $M_{\rm BH}$--$M_*$ relation of McConnell \& Ma~\cite{McConnellMa2013}, is well described by a modified Schechter form,
+\begin{equation}\label{eq:bhmf}
+\frac{dn}{d\ln M_{\rm BH}}
+=
+\phi_*
+\left(\frac{M_{\rm BH}}{M_s}\right)^{\alpha+1}
+\exp\!\left[-\left(\frac{M_{\rm BH}}{M_s}\right)^{\beta}\right],
+\end{equation}
+with parameters given by Liepold \& Ma~\cite{LiepoldMa2024}. Because this is a \emph{single-black-hole} mass function, it must be evaluated at the component mass rather than the total binary mass. For the fiducial equal-mass binary with $M_{\rm tot}=10^9\,M_\odot$, each component has $M_{\rm BH}=5\times10^8\,M_\odot$. Evaluated in a 0.2-dex mass bin at this mass, the Liepold \& Ma mass function predicts $\sim1000$ galaxies hosting a black hole at this mass within the MASSIVE survey volume ($2.05\times10^6$~Mpc$^3$, $D<108$~Mpc).
+
+\textit{Step~2: Mass-specific binary occupation.}---The Casey-Clyde et al.~\cite{CaseyClyde2025} mass-averaged occupation fraction $\mathcal{F}_{\rm BHB}\approx2.6\%$ cannot be applied directly, because the PTA-band residence time depends strongly on mass. For a circular GW-driven binary, the time to coalescence from $f_{\rm GW}=1$~nHz is
+\begin{equation}\label{eq:tc}
+t_c = \frac{5}{256}\,
+\frac{c^5}{(G\mathcal{M}_c)^{5/3}(\pi f_{\rm GW})^{8/3}},
+\end{equation}
+where $\mathcal{M}_c=M_{\rm tot}[q/(1+q)^2]^{3/5}$ is the chirp mass. For $M_{\rm tot}=10^9\,M_\odot$ and $q=1$, this gives $t_c\approx82$~Myr. $t_c$ is the residence time in the inspiral window $1\,{\rm nHz}\le f_{\rm GW}\le f_{\rm ISCO}$, and therefore sets the steady-state occupation of that window by binaries at mass $M_{\rm tot}$. Using the Casey-Clyde et al.\ local galaxy pairing rate $\dot f_0=0.04\pm0.01~{\rm Gyr}^{-1}$, the mass-specific occupation fraction is then
+\begin{equation}\label{eq:Pactive}
+P_{\rm active} = \dot f_0\,t_c \approx 0.04\times0.082 = 3.3\times10^{-3},
+\end{equation}
+or $0.33\%$. This is nearly an order of magnitude smaller than the mass-averaged value because the latter is dominated by more numerous low-mass SMBHs with much longer PTA-band residence times.
+
+\textit{Step~3: Mass-ratio weighting.}---Following Liepold \& Ma~\cite{LiepoldMa2024} Eq.~(6), we adopt a mass-ratio prior $p(q)\propto q^2$ normalized on $q\in[0.01,1]$. The fraction of binaries with $q>0.9$ is then
+\[
+f_q = 27.1\% .
+\]
+
+\textit{Step~4: Expected count.}---The number of PTA-band SMBHBs with $M_{\rm tot}\approx10^9\,M_\odot$ and $q>0.9$ within distance $D$ is
+\begin{equation}\label{eq:Npta}
+N_{\rm SMBHB}(<D)
+=
+\frac{dn}{d\ln M}\,
+\Delta\ln M\,
+\frac{4\pi}{3}D^3\,
+P_{\rm active}\,
+f_q.
+\end{equation}
+Eq.~\eqref{eq:Npta} counts binaries at any inspiral frequency above 1~nHz, not only those currently in the $\mu$Ares band. We propagate uncertainties in the black hole mass function parameters $(\phi_*,\alpha,\beta,M_s)$ and in $\dot f_0$ using Monte Carlo sampling. The median expectation crosses $N=1$ at $D\approx83$~Mpc, comparable to the Tier-3 echo horizon of $\sim80$~Mpc derived from the strain sensitivity in the main text. Within the local $108$~Mpc sphere, we obtain
+\[
+N_{\rm SMBHB} = 2.2^{+1.0}_{-0.7}\;(68\%) ,
+\qquad
+N_{\rm SMBHB} = 2.2^{+1.8}_{-1.1}\;(90\%).
+\]
+The dominant uncertainty sources are the black hole mass function cutoff mass $M_s$ and the pairing-rate normalization $\dot f_0$, which contribute comparable spread.
+
+\textit{Frequency distribution.}---The GW-driven evolution $df/dt\propto f^{11/3}$~\cite{Peters1964} piles binaries up at the lowest PTA frequencies, so the predicted population is strongly concentrated within the first few nHz. The echo program does \emph{not} require a local source to be in the $\mu$Ares band simultaneously with its PTA-band echoes. $\mu$Ares detects the Earth-term signal at the epoch when the source happens to pass through the $\mu$Hz band, while the PTA pulsar terms record the system's much earlier evolution.
+
+\textit{Self-consistency with the stochastic background.}---The same Liepold \& Ma-based census yields a stochastic-background amplitude $h_c(f=1\,{\rm yr}^{-1})\approx2.0\times10^{-15}$ through the Phinney formalism~\cite{Phinney2001}, using the mass-ratio and redshift moments quoted by Sato-Polito et al.~\cite{SatoPolito2024}. This is consistent with current PTA measurements. The local source count inferred here is therefore self-consistent with the observed nHz background.
+
+
+
+% ======================================================================
+
+\section{Spin-distance degeneracy in the pulsar network}\label{app:spin_degeneracy}
+
+One might expect the pulsar terms themselves to constrain the binary spin, since each pulsar term accumulates $N_{\rm SO}^{(P)}\sim30$--$100$ spin-orbit cycles depending on the fiducial scenario and $\tau_i$, substantially more than the $\sim2$--$3$ spin-orbit cycles accumulated in the $\mu$Ares Earth term. However, the pulsar network suffers from an exact degeneracy: the phase of pulsar $i$ depends on both the spin $\chi$ and the look-back time $\tau_i$, so a shift in $\chi$ can always be absorbed by a compensating shift in $\tau_i$ if the distance is unconstrained.
+
+With no prior on $\tau_i$, the marginalized Fisher information on $\chi$ therefore vanishes. Adding a Gaussian prior of width $\sigma_{\tau,i}$ on each look-back time shifts $F_{\tau_i\tau_i}\rightarrow F_{\tau_i\tau_i}+\sigma_{\tau,i}^{-2}$, giving
+\begin{equation}\label{eq:fisher_prior}
+  \sigma_\chi^{-2}
+  = \sum_{i=1}^{N_p}
+  \rho_i^2
+  \left(\frac{\partial\Phi_i}{\partial\chi}\right)^2
+  w_i,
+  \qquad
+  w_i = \frac{1}{1 + F_{\tau_i\tau_i}\sigma_{\tau,i}^2}\,.
+\end{equation}
+This interpolates smoothly between perfect distance knowledge ($w_i=1$) and no knowledge ($w_i=0$). Since $F_{\tau_i\tau_i}=\rho_i^2(2\pi f_{P,i})^2$ is very large, realistic weights are small. We retain only the 1.5pN spin-orbit contribution to $\partial\Phi/\partial\chi$, which is the leading-$\chi$ piece; the 2pN spin-spin term enters at order $\chi^2$ and is subdominant for this estimate. In the limit $w_i\ll1$, the per-pulsar contribution reduces to
+\begin{equation}\label{eq:sigma_chi_prior}
+  \sigma_\chi^{(i)}
+  \approx
+  \frac{\chi\,f_{P,i}\,\sigma_{\tau,i}}{N_{{\rm SO},i}},
+\end{equation}
+where $\sigma_{\tau,i}=(\delta L_{p,i}/L_{p,i})\tau_i$. The signal-to-noise ratio cancels: the bottleneck is the distance prior, not the SNR.
+
+Evaluating Eq.~\eqref{eq:sigma_chi_prior} for current high-quality pulsars reveals an instructive asymmetry. PSR~J0437$-$4715, with its exceptional distance precision $(\delta L_p/L_p=0.07\%)$ but modest baseline $(\tau=512~{\rm yr})$, yields $\sigma_\chi\approx0.03$. PSR~J1713$+$0747, despite accumulating the largest spin-orbit cycle budget in the array $(N_{\rm SO}\approx54$ over the canonical $\tau=L_p/c\approx3{,}836~{\rm yr}$), gives only $\sigma_\chi\approx0.9$, because its fractional distance uncertainty $(\delta L_p/L_p=0.94\%)$ is amplified by the long baseline through $\sigma_{\tau,i}\propto(\delta L_p/L_p)\tau_i$. The pulsar with the richest post-Newtonian content is therefore not the one that best constrains spin.
+
+The same asymmetry appears in the frequency-domain bin-shift test. The spin-induced pulsar-term shift $|\Delta f_P|$ is below the 20- and 30-yr PTA bin widths for every scenario and canonical baseline, and only at J0437 does the shift reach the 50-yr bin width of $0.63$~nHz, with $|\Delta f_P|\approx0.6$--$1.0$~nHz in the Conservative and Typical scenarios.
+
+The situation does not improve enough by combining many pulsars. A Fisher sum over the $\sim20$ VLBI-calibrated MSPs with $\delta L_p/L_p\lesssim1\%$ distributed over 0.5--3~kpc~\cite{Deller2019,Ding2023} gives $\sigma_\chi\sim0.2$, more than two orders of magnitude above the $\delta\chi/\chi\lesssim10^{-3}$ requirement for phase-coherent echo analysis. Even a factor-of-ten improvement in VLBI precision would only bring this down to $\sigma_\chi\sim0.02$. The pulsar network alone cannot determine the spin well enough for coherent tracking, and the primary spin measurement must come from the $\mu$Ares Earth term.
+
+% ======================================================================
+% Note: no \bibliographystyle — the revtex4-2 `aps` option sets apsrev4-2
+% automatically and writes the control record that enables article titles
+% (honors the longbibliography documentclass option).
+\bibliography{references}
+
+\end{document}
