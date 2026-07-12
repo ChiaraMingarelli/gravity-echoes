@@ -494,14 +494,22 @@ check("Ep2 = 2 A2 = 2(-3/4 - eta/12) matches Blanchet energy",
       abs(sys_beta.Ep2 - Ep2_manual) < 1e-12)
 
 A4 = -(27. / 8 - 19. * eta_test / 8 + eta_test ** 2 / 24)
-# For aligned chi=0.98 equal mass, add SS:
-A4_ss = -(1. / 48) * (-247 * 0.9604 + 721 * 0.9604)
-A4_full = A4 + A4_ss
-Ep4_manual = 3 * A4_full
-info(f"Ep4 (with SS) = {sys_beta.Ep4:.6f}")
-check("Ep4 structure consistent with Blanchet + Kidder",
+# SS is deliberately EXCLUDED from the TaylorT1 binding-energy path
+# (aligned-spin simplification; see the F4/A4 comments in smbhb_evolution).
+# The 2pN SS phase enters exclusively through tau_4_SS = -2 sigma and
+# phi_4_SS = -10 sigma in pn_decomposition(), with the eta-inclusive
+# Poisson & Will 1995 sigma — LAL-verified 2026-07-11 to machine precision
+# (audit_ss_convention.py).
+Ep4_manual = 3 * A4
+info(f"Ep4 (mass-only by design) = {sys_beta.Ep4:.6f}")
+check("Ep4 = 3 A4 (mass sector; SS excluded from T1 energy by design)",
       abs(sys_beta.Ep4 - Ep4_manual) < 1e-10,
       f"code: {sys_beta.Ep4:.6f}, manual: {Ep4_manual:.6f}")
+# Pin the LAL-verified SS convention itself:
+sigma_pw = (eta_test / 48) * (-247 * 0.9604 + 721 * 0.9604)
+check("sigma_SS matches eta-inclusive Poisson & Will 1995 (LAL-verified)",
+      abs(sys_beta.sigma_ss - sigma_pw) < 1e-12,
+      f"code: {sys_beta.sigma_ss:.6f}, PW: {sigma_pw:.6f}")
 print()
 
 # ============================================================

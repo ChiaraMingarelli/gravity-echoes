@@ -32,6 +32,12 @@ Pass criteria:
   library.pn_decomposition() vs Method B   : |dN| < 0.05 cyc, |dv/v| < 1e-6
   library.evolve(pn_order=4) vs Method A   : |dN| < 0.05 cyc, |dv/v| < 1e-6
   library N_total vs Mingarelli12 Table I  : |dN| < 0.5 cyc
+
+2026-07-11 SS-convention audit: Method B's original tau_4^SS/phi_4^SS carried
+a sigma/eta-style normalization inconsistent with Poisson & Will 1995 and with
+LAL; fixed to -2 sigma / -10 sigma (LAL-verified to machine precision — see
+audit_ss_convention.py). Method A now mirrors the library's documented
+exclusion of SS from TaylorT1 flux/energy.
 """
 
 import numpy as np
@@ -58,14 +64,17 @@ YR = 365.25 * 86400       # s               (Julian year)
 #   tau_3^SO   = (8/5) beta_SO                    (1.5pN SO; derived from CF+T2,
 #                                                  see memory/reference_SO_coefficients_derivation.md)
 #   tau_4 = 3058673/508032 + 5429 eta/504 + 617 eta^2/72 (Eq. 232, 2pN)
-#   tau_4^SS = -(40/eta) sigma_SS                 (2pN spin-spin; Poisson 1998)
+#   tau_4^SS = -2 sigma_SS                        (2pN spin-spin; Poisson & Will
+#                                                  1995 eta-inclusive sigma;
+#                                                  LAL-verified 2026-07-11,
+#                                                  see audit_ss_convention.py)
 #
 # TaylorT2 phase: Phi(v) = Phi_c - (1/(32 eta)) v^{-5} (1 + sum_k phi_k v^k)
 #   phi_2 = 3715/1008 + 55 eta/12                 (Eq. 234, 1pN)
 #   phi_3^tail = -10 pi                           (Eq. 234, 1.5pN tail)
 #   phi_3^SO   = (5/2) beta_SO                    (1.5pN SO; derived from CF+T2)
 #   phi_4 = 15293365/508032 + 27145 eta/504 + 3085 eta^2/72 (2pN mass)
-#   phi_4^SS = -(10/eta) sigma_SS                 (2pN spin-spin)
+#   phi_4^SS = -10 sigma_SS                       (2pN spin-spin; LAL-verified)
 #
 # Spin-orbit coefficient (Blanchet Eq. 230, Kidder 1995 Eq. 4.21):
 #   beta_SO = (1/12) sum_i [113 (m_i/M)^2 + 75 eta] chi_i cos kappa_i
@@ -82,8 +91,7 @@ def freshtau(eta, beta_SO, sigma_SS):
     tau_3 = -(32.0 / 5) * np.pi + (8.0 / 5) * beta_SO
     tau_4 = (3058673.0 / 508032 + 5429.0 * eta / 504
              + 617.0 * eta ** 2 / 72)
-    if eta > 0:
-        tau_4 += -(40.0 / eta) * sigma_SS
+    tau_4 += -2.0 * sigma_SS
     return tau_2, tau_3, tau_4
 
 
@@ -93,8 +101,7 @@ def freshphi(eta, beta_SO, sigma_SS):
     phi_3 = -10.0 * np.pi + (5.0 / 2) * beta_SO
     phi_4 = (15293365.0 / 508032 + 27145.0 * eta / 504
              + 3085.0 * eta ** 2 / 72)
-    if eta > 0:
-        phi_4 += -(10.0 / eta) * sigma_SS
+    phi_4 += -10.0 * sigma_SS
     return phi_2, phi_3, phi_4
 
 
@@ -201,22 +208,21 @@ def method_A_total_cycles(m1_msun, m2_msun, chi1, chi2, kappa1, kappa2,
     beta_SO, sigma_SS = fresh_beta_sigma(m1, m2, chi1, chi2, kappa1, kappa2)
 
     # ---- Flux coefficients (Blanchet 2006 Eq. 227, Blanchet 2014 Eq. 314)
+    # SS is deliberately EXCLUDED from flux/energy here, mirroring the
+    # library's documented aligned-spin simplification (smbhb_evolution.py
+    # F4/A4 comments): the 2pN SS phase enters exclusively through the
+    # TaylorT2/F2 coefficients. Kidder 1995 SS flux/energy terms belong to
+    # the planned include_ss option of the successor package (see AUDIT_SS.md).
     F2 = -(1247.0 / 336 + 35.0 * eta / 12)
     F3 = 4.0 * np.pi - beta_SO
-    F4 = (-(44711.0 / 9072 + 9271.0 * eta / 504 + 65.0 * eta ** 2 / 18)
-          + sigma_SS)
+    F4 = -(44711.0 / 9072 + 9271.0 * eta / 504 + 65.0 * eta ** 2 / 18)
 
     # ---- Energy derivative coefficients (Blanchet Eq. 193; Kidder 1995)
     # E(v) = -(mu/2) v^2 (1 + A2 v^2 + A3 v^3 + A4 v^4)
     # E'_hat(v) = 1 + 2 A2 v^2 + (5/2) A3 v^3 + 3 A4 v^4
     A2 = -(3.0 / 4 + eta / 12)
     A3 = (14.0 / 3 * chi_s + 2.0 * delta * chi_a) / 3.0  # SO part
-    A4_mass = -(27.0 / 8 - 19.0 * eta / 8 + eta ** 2 / 24)
-    A4_ss = -(1.0 / 48) * (
-        -247 * chi1 * chi2 * (ck1 * ck2 + sk1 * sk2)
-        + 721 * chi1 * ck1 * chi2 * ck2
-    )
-    A4 = A4_mass + A4_ss
+    A4 = -(27.0 / 8 - 19.0 * eta / 8 + eta ** 2 / 24)    # mass-only (see F4 note)
 
     E2 = 2.0 * A2
     E3 = 2.5 * A3

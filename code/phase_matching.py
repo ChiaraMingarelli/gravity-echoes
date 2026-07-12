@@ -129,6 +129,12 @@ def pn_cycles(f_low, f_high, M_tot, eta, chi):
     """
     GW cycle count from f_low to f_high at each pN order.
 
+    Aligned equal spins (chi1 = chi2 = chi), general mass ratio.
+    Coefficients LAL-verified 2026-07-11 (audit_ss_convention.py):
+    the 1.5pN SO term is 4 beta_SO with beta_SO = (113 - 76 eta) chi / 12
+    for aligned equal spins, and the 2pN SS term is -10 sigma_SS with the
+    eta-inclusive Poisson & Will 1995 sigma.
+
     Returns (N_newt, N_1pN, N_15pN, N_2pN)
     """
     v_low = (np.pi * G * M_tot * f_low / c ** 3) ** (1. / 3)
@@ -143,14 +149,15 @@ def pn_cycles(f_low, f_high, M_tot, eta, chi):
     c2 = 3715. / 756 + 55. * eta / 9
     N_1 = prefactor * c2 * (v_low ** (-3) - v_high ** (-3))
 
-    # 1.5pN (spin-orbit, equal mass aligned)
-    c3 = -16 * np.pi + (113. / 6) * chi
+    # 1.5pN (tail + spin-orbit; aligned equal spins, general mass ratio)
+    beta_so = (113. - 76. * eta) * chi / 12.
+    c3 = -16 * np.pi + 4. * beta_so
     N_15 = prefactor * c3 * (v_low ** (-2) - v_high ** (-2))
 
-    # 2pN (including spin-spin for equal mass aligned)
+    # 2pN (mass + spin-spin; eta-inclusive PW sigma, LAL-verified)
     sigma_SS = eta * (721. / 48 - 247. / 48) * chi ** 2
     c4 = (15293365. / 508032 + 27145. / 504 * eta
-           + 3085. / 72 * eta ** 2 - 10 * sigma_SS / eta)
+           + 3085. / 72 * eta ** 2 - 10 * sigma_SS)
     N_2 = prefactor * c4 * (v_low ** (-1) - v_high ** (-1))
 
     return N_0, N_1, N_15, N_2
